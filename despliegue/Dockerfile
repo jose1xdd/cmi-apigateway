@@ -7,7 +7,7 @@ WORKDIR /app
 # Copia el contenido del proyecto al contenedor
 COPY . .
 
-# Instala dependencias si es necesario (ejemplo  con Flask)
+# Instala dependencias si es necesario (ejemplo   con Flask)
 RUN pip install flask
 
 # Expone el puerto que usará la app
