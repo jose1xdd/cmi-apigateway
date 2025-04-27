@@ -13,5 +13,5 @@ RUN pip install flask
 # Expone el puerto que usará la app
 EXPOSE 5000
 
-# Define el comando por defecto para ejecutar
+# Define el comando por defecto para ejecutar 
 CMD ["python", "-m", "http.server", "5000"]
