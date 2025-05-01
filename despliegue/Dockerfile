@@ -1,7 +1,7 @@
 # Usa una imagen base oficial de Python
 FROM python:3.12-slim
 
-# Establece el directorio de trabajo en el contenedor
+# Establece el directorio de trabajo en el contenedor 
 WORKDIR /app
 
 # Copia el contenido del proyecto al contenedor
