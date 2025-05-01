@@ -3,29 +3,29 @@ name: Deploy to VPS
 on:
   push:
     branches:
-      - master  # Si tu rama principal tiene otro nombre, cámbialo aquí
+      - main  # Cambia esto si usas otra rama
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-      # Checkout del repositorio
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Configurar SSH para conectarse a la VPS
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      
-      # Configurar git para que use la conexión SSH
-      - name: Set up Git remote
+
+      - name: Add VPS to known_hosts
+        run: |
+          ssh-keyscan -H 148.113.175.43 >> ~/.ssh/known_hosts
+
+      - name: Add Git remote
         run: |
           git remote add despliegue ssh://despliegue@148.113.175.43/var/repos/test.git
-          
-      # Hacer el push del código al servidor
+
       - name: Push to VPS
         run: |
           git push -f despliegue master:master
