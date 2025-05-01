@@ -26,7 +26,7 @@ jobs:
 
       - name: Add Git remote
         run: |
-          git remote add despliegue ssh://despliegue@148.113.175.43/var/repos/test.git
+          git remote add despliegue ssh://despliegue@148.113.175.43/var/repos/topocar.git
 
       - name: Push to VPS
         run: |
