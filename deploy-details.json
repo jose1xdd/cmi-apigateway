@@ -1,6 +1,6 @@
 {
     "port": "8000",
-    "eviroments": {
+    "environments": {
         "NAME": "albin",
         "PORT": "8000"
     }
