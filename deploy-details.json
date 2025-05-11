@@ -1,0 +1,7 @@
+{
+    "port": "8000",
+    "eviroments": {
+        "NAME": "albin",
+        "PORT": "8000"
+    }
+}
