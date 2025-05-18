@@ -1,26 +1,23 @@
-from contextlib import asynccontextmanager
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import declarative_base, sessionmaker
-from app.utils.enviroment import enviroment
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-engine = create_async_engine('mysql+asyncmy://user:password@localhost:3306/CMI')
-async_session_maker = sessionmaker(
+# Configuración síncrona
+engine = create_engine('mysql+pymysql://user:password@localhost:3306/CMI')
+SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
-    bind=engine,
-    class_=AsyncSession
+    bind=engine
 )
 
 Base = declarative_base()
 
-@asynccontextmanager
-async def get_db_session():
-    session = async_session_maker()
+def get_db():
+    db = SessionLocal()
     try:
-        yield session
-        await session.commit()
+        yield db
+        db.commit()
     except Exception:
-        await session.rollback()
+        db.rollback()
         raise
     finally:
-        await session.close()
+        db.close()

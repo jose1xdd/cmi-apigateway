@@ -5,8 +5,8 @@ from sqlalchemy.orm import relationship
 
 
 class Persona(Base):
-    __tablename__ = 'persona'
-
+    __tablename__ = 'Persona'
+    
     id = Column(String(36), primary_key=True)
     tipoDocumento = Column(Enum(EnumDocumento))
     nombre = Column(String(50))
@@ -21,5 +21,7 @@ class Persona(Base):
     telefono = Column(String(20))
     idFamilia = Column(Integer)
     idParcialidad = Column(Integer)
-
+    
+    # Importante: "usuario" debe ser en minúsculas para coincidir con el nombre del atributo
+    # en la clase Usuario y "back_populates" debe ser "persona" en minúsculas
     usuario = relationship("Usuario", back_populates="persona", uselist=False)

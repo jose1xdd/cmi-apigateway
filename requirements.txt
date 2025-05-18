@@ -39,6 +39,8 @@ typer==0.15.3
 typing-extensions==4.13.2
 ujson==5.10.0
 uvicorn==0.33.0
-uvloop==0.21.0
+uvloop==0.21.0; sys_platform != 'win32'
 watchfiles==0.24.0
 websockets==13.1
+PyMySQL==1.1.1
+cryptography==45.0.2

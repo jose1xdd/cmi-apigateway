@@ -1,9 +1,7 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
 
 class UsuarioBase(BaseModel):
     email: EmailStr
-    is_active: Optional[bool] = True
 
 class UsuarioCreate(UsuarioBase):
     password: str

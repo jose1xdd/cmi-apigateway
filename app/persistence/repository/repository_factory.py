@@ -1,13 +1,9 @@
-
-from ast import Dict
 from typing import Type, TypeVar
-
+from sqlalchemy.orm import Session
 from app.persistence.repository.user_repository.impl.user_repository import UsuarioRepository
 from app.persistence.repository.user_repository.interface.interface_user_repository import IUsuarioRepository
 
-
 T = TypeVar("T")
-
 
 class RepositoryFactory:
     _registry: dict[Type, Type] = {
@@ -15,9 +11,9 @@ class RepositoryFactory:
     }
 
     @classmethod
-    def get_repository(cls, interface: Type[T]) -> T:
+    def get_repository(cls, interface: Type[T], db: Session) -> T:
         impl_class = cls._registry.get(interface)
         if not impl_class:
             raise ValueError(
                 f"No hay implementación registrada para la interfaz: {interface}")
-        return impl_class()
+        return impl_class(db)  # Solo pasamos db, el modelo se define en el repositorio

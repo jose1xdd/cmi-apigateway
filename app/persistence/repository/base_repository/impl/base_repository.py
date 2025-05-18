@@ -1,46 +1,60 @@
-from sqlalchemy import select, update, delete
-from typing import TypeVar, Optional, List
-
+from typing import Generic, TypeVar, Optional, List, Type
 from pydantic import BaseModel
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
 from app.persistence.repository.base_repository.interface.ibase_repository import IBaseRepository
 
 T = TypeVar('T', bound=BaseModel)
+M = TypeVar('M')  # Tipo para el modelo SQLAlchemy
 ID = TypeVar('ID')
 
-class BaseRepository(IBaseRepository[T, ID]):
-    def __init__(self, model):
+class BaseRepository(IBaseRepository[T, ID], Generic[T, M, ID]):
+    def __init__(self, model: Type[M], db: Session):
         self.model = model
+        self.db = db
     
-    async def get(self, db: AsyncSession, id: ID) -> Optional[T]:
-        result = await db.execute(
-            select(self.model).where(self.model.id == id)
-        )
-        return result.scalars().first()
+    def get(self, id: ID) -> Optional[M]:
+        return self.db.query(self.model).filter(self.model.id == id).first()
     
-    async def get_all(self, db: AsyncSession, skip: int = 0, limit: int = 100) -> List[T]:
-        result = await db.execute(
-            select(self.model).offset(skip).limit(limit)
-        )
-        return result.scalars().all()
+    def get_all(self, skip: int = 0, limit: int = 100) -> List[M]:
+        return self.db.query(self.model).offset(skip).limit(limit).all()
     
-    async def create(self, db: AsyncSession, obj_in: T) -> T:
-        db_obj = self.model(**obj_in.dict())
-        db.add(db_obj)
-        await db.flush()
+    def create(self, obj_in: T) -> M:
+        # Convertimos el modelo Pydantic a un diccionario
+        # y filtramos solo los campos válidos para el modelo SQLAlchemy 
+        obj_data = obj_in.dict()
+        
+        # Creamos la instancia del modelo SQLAlchemy
+        db_obj = self.model(**obj_data)
+        
+        # La añadimos a la sesión
+        self.db.add(db_obj)
+        
+        # Hacemos flush para obtener el ID pero no commit
+        # El commit se hará automáticamente en get_db()
+        self.db.flush()
+        
+        # Devolvemos el objeto creado
         return db_obj
     
-    async def update(self, db: AsyncSession, id: ID, obj_in: T) -> Optional[T]:
-        await db.execute(
-            update(self.model)
-            .where(self.model.id == id)
-            .values(**obj_in.dict(exclude_unset=True))
-        )
-        return await self.get(db, id)
+    def update(self, id: ID, obj_in: T) -> Optional[M]:
+        # Obtenemos el objeto existente
+        db_obj = self.get(id)
+        if db_obj is None:
+            return None
+            
+        # Actualizamos los campos que vienen en obj_in
+        obj_data = obj_in.dict(exclude_unset=True)
+        for key, value in obj_data.items():
+            if hasattr(db_obj, key):
+                setattr(db_obj, key, value)
+        
+        # La sesión detectará los cambios automáticamente
+        self.db.flush()  # Para asegurarnos de que se apliquen los cambios
+        
+        return db_obj
     
-    async def delete(self, db: AsyncSession, id: ID) -> bool:
-        result = await db.execute(
-            delete(self.model).where(self.model.id == id)
-        )
-        return result.rowcount > 0
+    def delete(self, id: ID) -> bool:
+        result = self.db.query(self.model).filter(self.model.id == id).delete()
+        self.db.flush()  # Aplicamos los cambios sin hacer commit
+        return result > 0
