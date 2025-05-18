@@ -1,7 +1,8 @@
 import json
 import os
 
-from app.utils.config_loader.models.exceptions import MissingEnvVarError
+from app.config.config_loader.models.exceptions import MissingEnvVarError
+
 
 class ConfigLoader:
     def __init__(self, filename='config.json', base_dir='app/resources'):

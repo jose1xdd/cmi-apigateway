@@ -1,32 +1,26 @@
-from typing import Any, Dict, List
-from databases import Database
-from sqlalchemy import Table
+from contextlib import asynccontextmanager
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import declarative_base, sessionmaker
+from app.utils.enviroment import enviroment
 
-from app.utils.config_loader.config_loader import ConfigLoader
+engine = create_async_engine('mysql+asyncmy://user:password@localhost:3306/CMI')
+async_session_maker = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine,
+    class_=AsyncSession
+)
 
+Base = declarative_base()
 
-class BaseRepository:
-    def __init__(self, table: Table):
-        self.db: Database = Database(ConfigLoader().get('DATABASE_URL'))
-        self.table = table
-        
-    async def get_all(self) -> List[dict]:
-        return await self.db.fetch_all(self.table.select())
-
-    async def get_by_id(self, id: int) -> dict:
-        query = self.table.select().where(self.table.c.id == id)
-        return await self.db.fetch_one(query)
-
-    async def delete(self, id: int) -> None:
-        query = self.table.delete().where(self.table.c.id == id)
-        await self.db.execute(query)
-
-    async def save(self, data: Dict[str, Any]) -> int:
-
-        query = self.table.insert().values(**data)
-        return await self.db.execute(query)
-
-    async def update(self, id: int, data: Dict[str, Any]) -> None:
-
-        query = self.table.update().where(self.table.c.id == id).values(**data)
-        await self.db.execute(query)
+@asynccontextmanager
+async def get_db_session():
+    session = async_session_maker()
+    try:
+        yield session
+        await session.commit()
+    except Exception:
+        await session.rollback()
+        raise
+    finally:
+        await session.close()
