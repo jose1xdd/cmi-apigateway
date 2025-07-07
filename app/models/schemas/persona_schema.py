@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import date
 from typing import Optional
 from app.persistence.model.enum import EnumDocumento, EnumSexo, EnumParentesco, EnumEscolaridad
@@ -23,6 +23,7 @@ class PersonaCreate(PersonaBase):
 
 class Persona(PersonaBase):
     id: str
-    
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(
+        from_attributes=True,  # Reemplazo de orm_mode en Pydantic V2
+        populate_by_name=True  # Permite usar alias y nombres de campo directamente
+    )

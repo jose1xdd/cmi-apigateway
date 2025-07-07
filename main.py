@@ -1,11 +1,12 @@
 import uvicorn
-
-from app.utils.enviroment import enviroment
+from app.utils.enviroment import settings
 
 
 def start_server():
-    port = int(enviroment.get('PORT'))
-    uvicorn.run("app:create_app", host="0.0.0.0", port=port, reload=True)
+    port = int(settings.port)
+    uvicorn.run("app:create_app", host="0.0.0.0",
+                port=port, reload=True, factory=False)
+
 
 if __name__ == "__main__":
     start_server()

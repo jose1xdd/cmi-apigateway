@@ -5,15 +5,20 @@ from app.persistence.repository.user_repository.interface.interface_user_reposit
 
 T = TypeVar("T")
 
+
 class RepositoryFactory:
+
+    def __init__(self, db: Session):
+        self.db = db
+
     _registry: dict[Type, Type] = {
         IUsuarioRepository: UsuarioRepository,
     }
 
-    @classmethod
-    def get_repository(cls, interface: Type[T], db: Session) -> T:
-        impl_class = cls._registry.get(interface)
+    def get_repository(self, interface: Type[T]) -> T:
+        impl_class = self._registry.get(interface)
         if not impl_class:
             raise ValueError(
                 f"No hay implementación registrada para la interfaz: {interface}")
-        return impl_class(db)  # Solo pasamos db, el modelo se define en el repositorio
+        # Solo pasamos db, el modelo se define en el repositorio
+        return impl_class(self.db)

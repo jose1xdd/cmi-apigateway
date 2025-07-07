@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 class UsuarioBase(BaseModel):
     email: EmailStr
@@ -11,4 +11,7 @@ class Usuario(UsuarioBase):
     personaId: str
     
     class Config:
-        orm_mode = True
+       model_config = ConfigDict(
+        from_attributes=True,  # Reemplazo de orm_mode en Pydantic V2
+        populate_by_name=True  # Permite usar alias y nombres de campo directamente
+    )

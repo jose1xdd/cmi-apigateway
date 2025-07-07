@@ -1,4 +1,5 @@
-from app.config.config_loader.config_loader import ConfigLoader
+
+from app.config.settings import Settings
 
 
-enviroment = ConfigLoader()
+settings = Settings()
