@@ -1,10 +1,10 @@
 
-from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
+from app.utils.enviroment import settings
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 # Configuración síncrona
-engine = create_engine('mysql+pymysql://user:password@localhost:3306/CMI')
+engine = create_engine(settings.database_url)
 SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
@@ -20,4 +20,3 @@ def get_db():
         yield db
     finally:
         db.close()
-

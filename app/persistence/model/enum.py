@@ -6,9 +6,16 @@ class EnumDocumento(Enum):
     TI = "TI"
     CE = "CE"
 
+
+class EnumRol(Enum):
+    admin = "admin"
+    usuario = "usuario"
+
+
 class EnumSexo(Enum):
     M = "M"
     F = "F"
+
 
 class EnumParentesco(Enum):
     PA = "PA"  # Padre
@@ -20,6 +27,7 @@ class EnumParentesco(Enum):
     YR = "YR"  # Yerno / Nuera
     CF = "CF"  # Cónyuge / Familiar
     HE = "HE"  # Hermano(a)
+
 
 class EnumEscolaridad(Enum):
     NI = "NI"   # Ninguna

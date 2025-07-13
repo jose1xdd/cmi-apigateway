@@ -1,0 +1,10 @@
+from pydantic import BaseModel, EmailStr, Field
+
+class LoginInput(BaseModel):
+    email: EmailStr = Field(..., description="Correo electrónico válido del usuario")
+    password: str = Field(
+        ..., 
+        min_length=8, 
+        max_length=64, 
+        description="Contraseña con mínimo 8 caracteres"
+    )
