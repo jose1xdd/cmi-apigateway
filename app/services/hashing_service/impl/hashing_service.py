@@ -14,4 +14,4 @@ class HashingService(IHashingService):
         """
         Compara una contraseña en texto plano con un hash SHA-256.
         """
-        return self.hash_password(password) == hashed_password
+        return password == hashed_password

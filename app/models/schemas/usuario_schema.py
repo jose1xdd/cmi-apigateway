@@ -2,10 +2,12 @@ from pydantic import BaseModel, ConfigDict, EmailStr
 
 class UsuarioBase(BaseModel):
     email: EmailStr
+    rol: str
 
 class UsuarioCreate(UsuarioBase):
     password: str
     personaId: str
+    rol: str
 
 class Usuario(UsuarioBase):
     personaId: str

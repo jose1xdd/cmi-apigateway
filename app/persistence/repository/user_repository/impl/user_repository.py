@@ -1,6 +1,4 @@
 from sqlalchemy.orm import Session
-from app.models.schemas.usuario_schema import UsuarioCreate
-from app.persistence.model.persona import Persona
 from app.persistence.model.usuario import Usuario
 from app.persistence.repository.base_repository.impl.base_repository import BaseRepository
 

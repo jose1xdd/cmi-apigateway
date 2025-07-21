@@ -1,6 +1,7 @@
 import logging
 from dependency_injector import containers, providers
 from app.config.database import get_db
+from app.middlewares.middleware_auth import MiddlewarAuth
 from app.persistence.repository.repository_factory import RepositoryFactory
 from app.persistence.repository.user_repository.interface.interface_user_repository import IUsuarioRepository
 from app.services.hashing_service.impl.hashing_service import HashingService
@@ -11,7 +12,8 @@ from app.utils.enviroment import settings
 
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
-        modules=["app.routers.main_router"])
+        modules=["app.routers.main_router",
+                  "app.utils.decorators.role_check_decorator"])
 
     db_session = providers.Resource(get_db)
 
@@ -44,4 +46,11 @@ class Container(containers.DeclarativeContainer):
         usuario_repository=usuario_repository,
         jwt_service=jwt_service,
         hashing_service=hashing_service,
+    )
+
+    middleware_auth = providers.Factory(
+        MiddlewarAuth,
+        jwt_service=jwt_service,
+        hashing_service=hashing_service,
+        logger=logger
     )

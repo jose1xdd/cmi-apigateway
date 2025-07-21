@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, Optional, List
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
 
 T = TypeVar('T', bound=BaseModel)
 ID = TypeVar('ID')

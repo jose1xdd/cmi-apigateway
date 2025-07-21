@@ -19,7 +19,9 @@ def create_app() -> FastAPI:
     container.wire(
     modules=[
         "app.routers.main_router",
-        "app.services.manager"
+        "app.services.manager",
+        "app.middlewares.middleware_auth",
+        "app.utils.decorators.role_check_decorator"
     ]
 )
     app.container = container

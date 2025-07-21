@@ -1,7 +1,8 @@
-from sqlalchemy import Enum, Column, String, Integer, Date, ForeignKey
+from sqlalchemy import Enum, Column, String, Integer, Date
 from app.config.database import Base
 from app.persistence.model.enum import EnumDocumento, EnumEscolaridad, EnumParentesco, EnumSexo
 from sqlalchemy.orm import relationship
+
 
 
 class Persona(Base):
@@ -21,7 +22,4 @@ class Persona(Base):
     telefono = Column(String(20))
     idFamilia = Column(Integer)
     idParcialidad = Column(Integer)
-    
-    # Importante: "usuario" debe ser en minúsculas para coincidir con el nombre del atributo
-    # en la clase Usuario y "back_populates" debe ser "persona" en minúsculas
     usuario = relationship("Usuario", back_populates="persona", uselist=False)

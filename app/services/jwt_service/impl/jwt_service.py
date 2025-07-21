@@ -11,7 +11,7 @@ class JwtService(IJwtService):
         self.algorithm = algorithm
         self.expires_in_minutes = expires_in_minutes
 
-    def create_jwt_token(self, email: str) -> str:
+    def create_jwt_token(self, email: str, role: str) -> str:
         """
         Genera un token JWT con el email como claim.
         """
@@ -20,7 +20,8 @@ class JwtService(IJwtService):
 
         payload = {
             # Claim: Subject (usualmente el identificador principal)
-            "sub": email,
+            "email": email,
+            "role": role,
             "exp": expire,              # Claim: Expiration
             "iat": now,                 # Claim: Issued at
         }
