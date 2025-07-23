@@ -13,7 +13,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Clona todo el historial
+          fetch-depth: 0
+
+      - name: Reemplazar secretos en deploy-details.json
+        run: |
+          if [ -f "deploy-details.json" ]; then
+            echo "Procesando deploy-details.json..."
+
+            # Reemplaza una cadena tipo "DATABASE_URL" con el valor real del secreto
+            sed -i "s|DATABASE_URL|${{ secrets.DATABASE_URL }}|g" deploy-details.json
+
+            # Agrega más reemplazos si es necesario
+            # sed -i "s|__API_KEY__|${{ secrets.API_KEY }}|g" deploy-details.json
+
+            echo "Archivo actualizado:"
+            cat deploy-details.json
+          else
+            echo "Archivo deploy-details.json no encontrado en la raíz."
+          fi
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.3
@@ -30,4 +47,8 @@ jobs:
 
       - name: Push to VPS
         run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add deploy-details.json
+          git commit -m "update deploy details with secrets" || echo "No changes to commit"
           git push -f despliegue master:master
