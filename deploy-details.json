@@ -1,9 +1,9 @@
 {
     "port": "8000",
     "environments": {
-        "DATABASE_URL": "$DATABASE_URL",
+        "DATABASE_URL": "_DATABASE_URL_",
         "PORT": "8000",
-        "SECRET_KEY": "$SECRET_KEY",
+        "SECRET_KEY": "_SECRET_KEY_",
         "ALGORITHM": "HS256",
         "EXPIRES_IN_MINUTES": 60
     }

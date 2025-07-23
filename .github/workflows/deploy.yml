@@ -21,11 +21,11 @@ jobs:
             echo "Procesando deploy-details.json..."
 
             # Reemplaza una cadena tipo "DATABASE_URL" con el valor real del secreto
-            sed -i "s|$DATABASE_URL|${{ secrets.DATABASE_URL }}|g" deploy-details.json
+            sed -i "s|_DATABASE_URL_|${{ secrets.DATABASE_URL }}|g" deploy-details.json
             
             # Reemplaza una cadena tipo "SECRET_KEY" con el valor real del secreto
 
-            sed -i "s|$SECRET_KEY|${{ secrets.SECRET_KEY }}|g" deploy-details.json
+            sed -i "s|_SECRET_KEY_|${{ secrets.SECRET_KEY }}|g" deploy-details.json
 
             # Agrega más reemplazos si es necesario
             # sed -i "s|__API_KEY__|${{ secrets.API_KEY }}|g" deploy-details.json
