@@ -1,5 +1,7 @@
 from typing import Type, TypeVar
 from sqlalchemy.orm import Session
+from app.persistence.repository.recovery_code_repository.impl.recovery_code_repository import RecoveryCodeRepository
+from app.persistence.repository.recovery_code_repository.interface.interface_recovery_code_repository import IRecoveryCodeRepository
 from app.persistence.repository.user_repository.impl.user_repository import UsuarioRepository
 from app.persistence.repository.user_repository.interface.interface_user_repository import IUsuarioRepository
 
@@ -13,6 +15,7 @@ class RepositoryFactory:
 
     _registry: dict[Type, Type] = {
         IUsuarioRepository: UsuarioRepository,
+        IRecoveryCodeRepository: RecoveryCodeRepository
     }
 
     def get_repository(self, interface: Type[T]) -> T:

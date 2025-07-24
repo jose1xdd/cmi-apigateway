@@ -16,3 +16,8 @@ class Settings(BaseSettings):
     secret_key: str
     algorithm: str
     expires_in_minutes: int
+
+    smtp_server: str
+    smtp_port: int
+    smtp_password: str
+    smtp_email: str

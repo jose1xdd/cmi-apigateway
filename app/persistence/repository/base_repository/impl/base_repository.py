@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar, Optional, List, Type
+from typing import Generic, TypeVar, Optional, List, Type, Union
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -7,6 +7,7 @@ from app.persistence.repository.base_repository.interface.ibase_repository impor
 T = TypeVar('T', bound=BaseModel)
 M = TypeVar('M')  # Tipo para el modelo SQLAlchemy
 ID = TypeVar('ID')
+
 
 class BaseRepository(IBaseRepository[T, ID], Generic[T, M, ID]):
     def __init__(self, model: Type[M], db: Session):
@@ -32,7 +33,7 @@ class BaseRepository(IBaseRepository[T, ID], Generic[T, M, ID]):
 
     def get(self, id: ID) -> Optional[M]:
         return self.db.query(self.model).filter(self.model.id == id).first()
-    
+
     def get_all(self, skip: int = 0, limit: int = 100) -> List[M]:
         return self.db.query(self.model).offset(skip).limit(limit).all()
 
@@ -43,14 +44,24 @@ class BaseRepository(IBaseRepository[T, ID], Generic[T, M, ID]):
         self._commit_and_refresh(db_obj)
         return db_obj
 
-    def update(self, id: ID, obj_in: T) -> Optional[M]:
+    def update(self, id: ID, obj_in: Union[BaseModel, M]) -> Optional[M]:
         db_obj = self.get(id)
         if db_obj is None:
             return None
-        obj_data = obj_in.dict(exclude_unset=True)
+
+        if isinstance(obj_in, BaseModel):
+            obj_data = obj_in.dict(exclude_unset=True)
+        else:
+            # Si ya es una instancia de SQLAlchemy, convertimos a dict ignorando atributos internos
+            obj_data = {
+                key: getattr(obj_in, key)
+                for key in vars(obj_in)
+                if not key.startswith("_") and hasattr(db_obj, key)
+            }
+
         for key, value in obj_data.items():
-            if hasattr(db_obj, key):
-                setattr(db_obj, key, value)
+            setattr(db_obj, key, value)
+
         self._commit_and_refresh(db_obj)
         return db_obj
 
