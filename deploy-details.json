@@ -1,8 +1,8 @@
 {
-    "port": "8000",
+    "port": "8080",
     "environments": {
         "DATABASE_URL": "_DATABASE_URL_",
-        "PORT": "8000",
+        "PORT": "8080",
         "SECRET_KEY": "_SECRET_KEY_",
         "ALGORITHM": "HS256",
         "EXPIRES_IN_MINUTES": 60,
