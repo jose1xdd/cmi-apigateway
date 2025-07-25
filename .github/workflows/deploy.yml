@@ -27,8 +27,8 @@ jobs:
 
             sed -i "s|_SECRET_KEY_|${{ secrets.SECRET_KEY }}|g" deploy-details.json
 
-            # Agrega más reemplazos si es necesario
-            # sed -i "s|__API_KEY__|${{ secrets.API_KEY }}|g" deploy-details.json
+            sed -i "s|_SMTP_PASSWORD_|${{ secrets.SMTP_PASSWORD }}|g" deploy-details.json
+           
 
             echo "Archivo actualizado:"
             cat deploy-details.json

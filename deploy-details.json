@@ -5,6 +5,10 @@
         "PORT": "8000",
         "SECRET_KEY": "_SECRET_KEY_",
         "ALGORITHM": "HS256",
-        "EXPIRES_IN_MINUTES": 60
+        "EXPIRES_IN_MINUTES": 60,
+        "SMTP_SERVER": "smtp.gmail.com",
+        "SMTP_PORT": "587",
+        "SMTP_EMAIL": "comunidadquillancingaconsaca@gmail.com",
+        "SMTP_PASSWORD":"_SMTP_PASSWORD_"
     }
 }
