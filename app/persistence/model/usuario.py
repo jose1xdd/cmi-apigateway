@@ -16,3 +16,4 @@ class Usuario(Base):
     # Importante: "persona" debe ser en minúsculas para coincidir con el nombre del atributo
     # en la clase Persona y "back_populates" debe ser "usuario" en minúsculas
     persona = relationship(Persona, back_populates="usuario")
+    codigos = relationship("CodigoRecuperacion", back_populates="usuario")
