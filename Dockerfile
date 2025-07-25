@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expone el puerto en el que FastAPI correrá
-EXPOSE 8000
+EXPOSE 8080
 
 # Define el comando para ejecutar la aplicación
 CMD ["python", "main.py"]
