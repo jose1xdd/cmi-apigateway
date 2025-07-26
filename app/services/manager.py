@@ -89,3 +89,12 @@ class Manager():
 
     def create_person(self, data):
         return self.client_personas.create_persona(data)
+
+    def update_person(self, id_persona: str, data):
+        return self.client_personas.update_persona(id_persona, data)
+
+    def delete_person(self, id_persona: str):
+        return self.client_personas.delete_persona(id_persona)
+
+    def list_personas(self, page: int, page_size: int):
+        return self.client_personas.list_personas(page=page, page_size=page_size)
