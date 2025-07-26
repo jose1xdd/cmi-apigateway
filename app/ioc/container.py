@@ -1,5 +1,6 @@
 import logging
 from dependency_injector import containers, providers
+from app.client.ms_gestion_usuarios.impl.client_personas import ClientPersonas
 from app.config.database import get_db
 from app.middlewares.middleware_auth import MiddlewarAuth
 from app.persistence.repository.recovery_code_repository.interface.interface_recovery_code_repository import IRecoveryCodeRepository
@@ -56,6 +57,11 @@ class Container(containers.DeclarativeContainer):
         smtp_email=settings.smtp_email
     )
 
+    client_personas = providers.Factory(
+        ClientPersonas,
+        url=settings.ms_gestion_usuarios_url
+    )
+
     manager = providers.Factory(
         Manager,
         logger=logger,
@@ -63,7 +69,8 @@ class Container(containers.DeclarativeContainer):
         jwt_service=jwt_service,
         hashing_service=hashing_service,
         email_service=email_service,
-        code_repository=code_repository
+        code_repository=code_repository,
+        client_personas=client_personas
     )
 
     middleware_auth = providers.Factory(

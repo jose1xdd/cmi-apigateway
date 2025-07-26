@@ -6,6 +6,18 @@ from fastapi.responses import JSONResponse
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR
 from app.utils.exceptions_handlers.models.error_response import AppException, ErrorResponse
 
+def format_validation_errors(errors: list) -> str:
+    mensajes = []
+    for err in errors:
+        loc = " -> ".join(str(e) for e in err.get("loc", []))
+        msg = err.get("msg", "Error desconocido")
+        input_val = err.get("input", None)
+
+        if input_val:
+            mensajes.append(f"Campo '{loc}': {msg}. Valor recibido: '{input_val}'")
+        else:
+            mensajes.append(f"Campo '{loc}': {msg}")
+    return " | ".join(mensajes)
 
 async def global_exception_handler(request: Request, exc: Exception):
     error = ErrorResponse(
@@ -30,9 +42,10 @@ async def custom_app_exception_handler(request: Request, exc: AppException):
     return JSONResponse(status_code=exc.codigo_http, content=error.__dict__)
 
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    mensaje_limpio = format_validation_errors(exc.errors())
     error = ErrorResponse(
         codigo_http=HTTP_400_BAD_REQUEST,
-        mensaje="Error de validación: " + str(exc.errors()),
+        mensaje=f"Error de validación: {mensaje_limpio}",
         fecha=datetime.utcnow().isoformat()
     )
     return JSONResponse(status_code=HTTP_400_BAD_REQUEST, content=error.__dict__)

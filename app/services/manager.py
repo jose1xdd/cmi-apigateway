@@ -1,5 +1,6 @@
 import logging
 
+from app.client.ms_gestion_usuarios.interface.interface_client_personas import IClientPersonas
 from app.models.inputs.login_input import LoginInput
 from app.models.inputs.recovery_password_input import RecoveryPassword
 from app.models.inputs.reste_password_input import ResetPassword
@@ -23,6 +24,7 @@ class Manager():
                  usuario_repository: IUsuarioRepository,
                  email_service: IEmailService,
                  code_repository: IRecoveryCodeRepository,
+                 client_personas: IClientPersonas,
                  logger: logging.Logger):
         self.usuario_repository = usuario_repository
         self.logger = logger
@@ -30,6 +32,7 @@ class Manager():
         self.hashing_service = hashing_service
         self.email_service = email_service
         self.code_repository = code_repository
+        self.client_personas = client_personas
 
     def login(self, data: LoginInput):
         self.logger.info("se inicia el proceso de loggin")
@@ -83,3 +86,6 @@ class Manager():
         hashed_password = self.hashing_service.hash_password(password)
         self.usuario_repository.update_password(data.email, hashed_password)
         self.email_service.send_email_reset_password(data.email, password)
+
+    def create_person(self, data):
+        return self.client_personas.create_persona(data)

@@ -9,6 +9,7 @@
         "SMTP_SERVER": "smtp.gmail.com",
         "SMTP_PORT": "587",
         "SMTP_EMAIL": "comunidadquillancingaconsaca@gmail.com",
-        "SMTP_PASSWORD":"_SMTP_PASSWORD_"
+        "SMTP_PASSWORD": "_SMTP_PASSWORD_",
+        "MS_GESTION_USUARIOS_URL": "http://127.0.0.1:8081/ms-gestion-usuarios/personas/create"
     }
 }

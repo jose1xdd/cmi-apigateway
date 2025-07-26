@@ -21,3 +21,5 @@ class Settings(BaseSettings):
     smtp_port: int
     smtp_password: str
     smtp_email: str
+
+    ms_gestion_usuarios_url: str
