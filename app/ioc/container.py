@@ -1,5 +1,8 @@
 import logging
 from dependency_injector import containers, providers
+from dependency_injector.wiring import Provide, inject
+from fastapi import Depends
+from requests import Session
 from app.client.ms_gestion_usuarios.impl.client_personas import ClientPersonas
 from app.config.database import get_db
 from app.middlewares.middleware_auth import MiddlewarAuth
@@ -15,25 +18,8 @@ from app.utils.enviroment import settings
 
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
-        modules=["app.routers.main_router",
+        modules=["app.ioc.container",
                  "app.utils.decorators.role_check_decorator"])
-
-    db_session = providers.Resource(get_db)
-
-    repository_factory = providers.Factory(
-        RepositoryFactory,
-        db=db_session,
-    )
-
-    usuario_repository = providers.Factory(
-        lambda factory: factory.get_repository(IUsuarioRepository),
-        factory=repository_factory
-    )
-
-    code_repository = providers.Factory(
-        lambda factory: factory.get_repository(IRecoveryCodeRepository),
-        factory=repository_factory
-    )
 
     logger = providers.Singleton(logging.getLogger, __name__)
 
@@ -62,20 +48,31 @@ class Container(containers.DeclarativeContainer):
         url=settings.ms_gestion_usuarios_url
     )
 
-    manager = providers.Factory(
-        Manager,
-        logger=logger,
-        usuario_repository=usuario_repository,
-        jwt_service=jwt_service,
-        hashing_service=hashing_service,
-        email_service=email_service,
-        code_repository=code_repository,
-        client_personas=client_personas
-    )
-
     middleware_auth = providers.Factory(
         MiddlewarAuth,
         jwt_service=jwt_service,
         hashing_service=hashing_service,
         logger=logger
+    )
+
+
+@inject
+def get_manager(
+    db: Session = Depends(get_db),
+    logger: logging.Logger = Depends(Provide[Container.logger]),
+    jwt_service=Depends(Provide[Container.jwt_service]),
+    hashing_service=Depends(Provide[Container.hashing_service]),
+    email_service=Depends(Provide[Container.email_service]),
+    client_personas=Depends(Provide[Container.client_personas]),
+) -> Manager:
+    factory = RepositoryFactory(db=db)
+
+    return Manager(
+        logger=logger,
+        usuario_repository=factory.get_repository(IUsuarioRepository),
+        code_repository=factory.get_repository(IRecoveryCodeRepository),
+        jwt_service=jwt_service,
+        hashing_service=hashing_service,
+        email_service=email_service,
+        client_personas=client_personas
     )

@@ -11,24 +11,25 @@ from app.utils.exceptions_handlers.exceptions_handlers import (
 from app.utils.exceptions_handlers.models.error_response import AppException
 from app.routers.main_router import main_router
 
+
 def create_app() -> FastAPI:
     app = FastAPI()
 
     # Crear el container
     container = Container()
     container.wire(
-    modules=[
-        "app.routers.main_router",
-        "app.services.manager",
-        "app.middlewares.middleware_auth",
-        "app.utils.decorators.role_check_decorator"
-    ]
-)
+        modules=[
+            "app.ioc.container",
+            "app.middlewares.middleware_auth",
+            "app.utils.decorators.role_check_decorator"
+        ]
+    )
     app.container = container
 
     # Registrar excepciones
     app.add_exception_handler(AppException, custom_app_exception_handler)
-    app.add_exception_handler(RequestValidationError, validation_exception_handler)
+    app.add_exception_handler(RequestValidationError,
+                              validation_exception_handler)
     app.add_exception_handler(Exception, global_exception_handler)
 
     # Registrar router
