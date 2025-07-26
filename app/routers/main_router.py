@@ -1,6 +1,5 @@
 from dependency_injector.wiring import Provide, inject
-from fastapi import APIRouter, Depends, status
-from h11 import Response
+from fastapi import APIRouter, Depends, Request, Response, status
 from pydantic.type_adapter import R
 
 from app.models.inputs.login_input import LoginInput
@@ -31,6 +30,7 @@ async def password_recovery(
     manager.password_recovery(data)
     return {}
 
+
 @main_router.post("/password/reset", status_code=status.HTTP_202_ACCEPTED)
 @inject
 async def password_reset(
@@ -39,3 +39,19 @@ async def password_reset(
 
     manager.password_reset(data)
     return {}
+
+
+@main_router.post("/personas/create", status_code=status.HTTP_202_ACCEPTED)
+@inject
+async def password_reset(
+        data: Request,
+        claims: dict = Depends(require_roles(["admin"])),
+        manager: Manager = Depends(Provide[Container.manager])):
+    body = await data.json()
+    external_response = manager.create_person(body)
+    return Response(
+        content=external_response.content,
+        status_code=external_response.status_code,
+        media_type=external_response.headers.get(
+            "Content-Type", "application/json")
+    )
