@@ -1,20 +1,20 @@
 from sqlalchemy.orm import Session
+from typing import Optional
 from app.persistence.model.usuario import Usuario
 from app.persistence.repository.base_repository.impl.base_repository import BaseRepository
+from app.persistence.repository.user_repository.interface.interface_user_repository import IUsuarioRepository
 
-
-class UsuarioRepository(BaseRepository):
+class UsuarioRepository(BaseRepository, IUsuarioRepository):
     def __init__(self, db: Session):
-        # Llamar al constructor de la clase base
         super().__init__(Usuario, db)
 
-    def get_by_email(self, email: str):
+    def get_by_email(self, email: str) -> Optional[Usuario]:
         return self.db.query(self.model).filter(self.model.email == email).first()
 
-    def update_password(self, email: str, password: str):
+    def update_password(self, email: str, password: str) -> Optional[Usuario]:
         usuario = self.get_by_email(email)
-        usuario.password = password
-        self.db.add(usuario)
-        self.db.commit()
-        self.db.refresh(usuario)
+        if usuario:
+            usuario.password = password
+            self.db.commit()
+            self.db.refresh(usuario)
         return usuario

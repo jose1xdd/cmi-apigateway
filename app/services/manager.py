@@ -3,8 +3,6 @@ import logging
 from app.models.inputs.login_input import LoginInput
 from app.models.inputs.recovery_password_input import RecoveryPassword
 from app.models.inputs.reste_password_input import ResetPassword
-from app.models.schemas.recovery_code_schema import CodigoRecuperacionCreate
-from app.models.schemas.usuario_schema import UsuarioCreate
 from app.persistence.model.codigo_recuperacion import CodigoRecuperacion
 from app.persistence.model.usuario import Usuario
 from app.persistence.repository.recovery_code_repository.interface.interface_recovery_code_repository import IRecoveryCodeRepository
@@ -32,16 +30,6 @@ class Manager():
         self.hashing_service = hashing_service
         self.email_service = email_service
         self.code_repository = code_repository
-
-    def test(self):
-        self.logger.info("123")
-        usuario = UsuarioCreate(
-            email="juan1.perez@example.com",
-            password=self.hashing_service.hash_password("123456789"),
-            personaId="123456789",
-            rol="admin"
-        )
-        return self.usuario_repository.create(usuario)
 
     def login(self, data: LoginInput):
         self.logger.info("se inicia el proceso de loggin")
@@ -72,7 +60,7 @@ class Manager():
         self.logger.info("se valida existencia del usuario")
 
         self.code_repository.create(
-            CodigoRecuperacionCreate(
+            CodigoRecuperacion(
                 codigo=hash_code, emailUsuario=data.email, estado=True)
         )
         self.logger.info("codigo de recuperacion creado")

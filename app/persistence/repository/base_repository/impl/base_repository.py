@@ -37,12 +37,20 @@ class BaseRepository(IBaseRepository[T, ID], Generic[T, M, ID]):
     def get_all(self, skip: int = 0, limit: int = 100) -> List[M]:
         return self.db.query(self.model).offset(skip).limit(limit).all()
 
-    def create(self, obj_in: T) -> M:
-        obj_data = obj_in.dict()
-        db_obj = self.model(**obj_data)
-        self.db.add(db_obj)
-        self._commit_and_refresh(db_obj)
-        return db_obj
+    def create(self, obj_in: Union[T, M]) -> M:
+            if isinstance(obj_in, self.model):
+                db_obj = obj_in  # Ya es una instancia SQLAlchemy
+            else:
+                # Suponemos que es un Pydantic BaseModel
+                if hasattr(obj_in, "dict"):
+                    obj_data = obj_in.dict(exclude_unset=True)
+                    db_obj = self.model(**obj_data)
+                else:
+                    raise ValueError("El objeto no es ni instancia del modelo ni un esquema Pydantic.")
+
+            self.db.add(db_obj)
+            self._commit_and_refresh(db_obj)
+            return db_obj
 
     def update(self, id: ID, obj_in: Union[BaseModel, M]) -> Optional[M]:
         db_obj = self.get(id)

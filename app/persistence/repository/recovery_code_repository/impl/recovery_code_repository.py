@@ -3,9 +3,10 @@ from sqlalchemy.orm import Session
 from app.persistence.model.codigo_recuperacion import CodigoRecuperacion
 from app.persistence.model.usuario import Usuario
 from app.persistence.repository.base_repository.impl.base_repository import BaseRepository
+from app.persistence.repository.recovery_code_repository.interface.interface_recovery_code_repository import IRecoveryCodeRepository
 
 
-class RecoveryCodeRepository(BaseRepository):
+class RecoveryCodeRepository(BaseRepository,IRecoveryCodeRepository):
     def __init__(self, db: Session):
         # Llamar al constructor de la clase base
         super().__init__(CodigoRecuperacion, db)
