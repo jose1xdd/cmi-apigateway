@@ -9,7 +9,8 @@ from app.utils.exceptions_handlers.exceptions_handlers import (
     validation_exception_handler,
 )
 from app.utils.exceptions_handlers.models.error_response import AppException
-from app.routers.main_router import main_router
+from app.routers.user_router import user_router
+from app.routers.persona_router import persona_router
 
 
 def create_app() -> FastAPI:
@@ -33,7 +34,8 @@ def create_app() -> FastAPI:
     app.add_exception_handler(Exception, global_exception_handler)
 
     # Registrar router
-    app.include_router(main_router, prefix="/cmi-apigateway")
+    app.include_router(user_router, prefix="/cmi-apigateway")
+    app.include_router(persona_router,prefix="/cmi-apigateway/personas")
 
     # Logging
     logging.basicConfig(

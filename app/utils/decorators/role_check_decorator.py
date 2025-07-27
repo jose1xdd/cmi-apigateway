@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, Request, status
+from fastapi import Depends, Request, status
 from typing import List
 from dependency_injector.wiring import Provide, inject
 from app.ioc.container import Container
@@ -20,5 +20,10 @@ def require_roles(permitted_roles: List[str]):
                 codigo=status.HTTP_403_FORBIDDEN,
                 mensaje="No tienes permiso para acceder a este recurso"
             )
-        return claims
+        # ❌ Elimina exp e iat del resultado
+        filtered_claims = {
+            k: v for k, v in claims.items() if k not in ("exp", "iat")
+        }
+        return filtered_claims
     return role_dependency
+
