@@ -12,7 +12,8 @@ from app.persistence.repository.user_repository.interface.interface_user_reposit
 from app.services.email_service.impl.email_service import EmailService
 from app.services.hashing_service.impl.hashing_service import HashingService
 from app.services.jwt_service.impl.jwt_service import JwtService
-from app.services.manager import Manager
+from app.services.persona_manager import PersonaManager
+from app.services.user_manager import UserManager
 from app.utils.enviroment import settings
 
 
@@ -57,22 +58,28 @@ class Container(containers.DeclarativeContainer):
 
 
 @inject
-def get_manager(
+def get_user_manager(
     db: Session = Depends(get_db),
     logger: logging.Logger = Depends(Provide[Container.logger]),
     jwt_service=Depends(Provide[Container.jwt_service]),
     hashing_service=Depends(Provide[Container.hashing_service]),
     email_service=Depends(Provide[Container.email_service]),
-    client_personas=Depends(Provide[Container.client_personas]),
-) -> Manager:
+) -> UserManager:
     factory = RepositoryFactory(db=db)
 
-    return Manager(
+    return UserManager(
         logger=logger,
         usuario_repository=factory.get_repository(IUsuarioRepository),
         code_repository=factory.get_repository(IRecoveryCodeRepository),
         jwt_service=jwt_service,
         hashing_service=hashing_service,
         email_service=email_service,
-        client_personas=client_personas
     )
+
+
+@inject
+def get_persona_manager(
+    logger: logging.Logger = Depends(Provide[Container.logger]),
+    client_personas=Depends(Provide[Container.client_personas]),
+) -> PersonaManager:
+    return PersonaManager(client_personas, logger)

@@ -1,7 +1,6 @@
 from typing import Optional
 from sqlalchemy.orm import Session
 from app.persistence.model.codigo_recuperacion import CodigoRecuperacion
-from app.persistence.model.usuario import Usuario
 from app.persistence.repository.base_repository.impl.base_repository import BaseRepository
 from app.persistence.repository.recovery_code_repository.interface.interface_recovery_code_repository import IRecoveryCodeRepository
 

@@ -1,2 +1,2 @@
 AUTH_HEADER = "Authorization"
-JSON_HEADER = "application/json"
+JSON_HEADER = {"Content-Type": "application/json"}
