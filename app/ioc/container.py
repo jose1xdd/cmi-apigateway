@@ -3,13 +3,15 @@ from dependency_injector import containers, providers
 from dependency_injector.wiring import Provide, inject
 from fastapi import Depends
 from requests import Session
-from app.client.ms_gestion_usuarios.impl.client_personas import ClientPersonas
+from app.client.ms_gestion_usuarios.familia.impl.client_familia import ClientFamilia
+from app.client.ms_gestion_usuarios.personas.impl.client_personas import ClientPersonas
 from app.config.database import get_db
 from app.middlewares.middleware_auth import MiddlewarAuth
 from app.persistence.repository.recovery_code_repository.interface.interface_recovery_code_repository import IRecoveryCodeRepository
 from app.persistence.repository.repository_factory import RepositoryFactory
 from app.persistence.repository.user_repository.interface.interface_user_repository import IUsuarioRepository
 from app.services.email_service.impl.email_service import EmailService
+from app.services.familia_manager import FamiliaManager
 from app.services.hashing_service.impl.hashing_service import HashingService
 from app.services.jwt_service.impl.jwt_service import JwtService
 from app.services.persona_manager import PersonaManager
@@ -49,6 +51,11 @@ class Container(containers.DeclarativeContainer):
         url=settings.ms_gestion_usuarios_url
     )
 
+    client_familia = providers.Factory(
+        ClientFamilia,
+        url=settings.ms_gestion_usuarios_url
+    )
+
     middleware_auth = providers.Factory(
         MiddlewarAuth,
         jwt_service=jwt_service,
@@ -83,3 +90,11 @@ def get_persona_manager(
     client_personas=Depends(Provide[Container.client_personas]),
 ) -> PersonaManager:
     return PersonaManager(client_personas, logger)
+
+
+@inject
+def get_familia_manager(
+    logger: logging.Logger = Depends(Provide[Container.logger]),
+    client_familia=Depends(Provide[Container.client_familia]),
+) -> FamiliaManager:
+    return FamiliaManager(client_familia, logger)

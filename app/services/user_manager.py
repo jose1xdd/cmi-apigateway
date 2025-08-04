@@ -1,8 +1,8 @@
 import logging
 
-from app.models.inputs.login_input import LoginInput
-from app.models.inputs.recovery_password_input import RecoveryPassword
-from app.models.inputs.reste_password_input import ResetPassword
+from app.models.inputs.usuario.login_input import LoginInput
+from app.models.inputs.usuario.recovery_password_input import RecoveryPassword
+from app.models.inputs.usuario.reste_password_input import ResetPassword
 from app.persistence.model.codigo_recuperacion import CodigoRecuperacion
 from app.persistence.model.usuario import Usuario
 from app.persistence.repository.recovery_code_repository.interface.interface_recovery_code_repository import IRecoveryCodeRepository
@@ -43,7 +43,8 @@ class UserManager():
             user.password, hashed_pasword)
         if (verify_password):
             self.logger.info("contraseña validada generando jwt")
-            jwt = self.jwt_service.create_jwt_token(data.email, user.rol.value)
+            jwt = self.jwt_service.create_jwt_token(
+                data.email, user.rol.value, user.personaId)
             return {"estado": "Exitoso", "jwt": jwt}
         return {"estado": "Fallido", "contraseña": "invalida"}
 

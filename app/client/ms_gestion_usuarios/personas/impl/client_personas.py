@@ -1,7 +1,7 @@
 import requests
 from typing import Dict, Any, Optional
 
-from app.client.ms_gestion_usuarios.interface.interface_client_personas import IClientPersonas
+from app.client.ms_gestion_usuarios.personas.interface.interface_client_personas import IClientPersonas
 from app.utils.constans import JSON_HEADER
 
 
