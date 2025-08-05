@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query, Request, Response, status
+from fastapi import APIRouter, Depends, Query, Response, status
 
 from app.ioc.container import get_persona_manager
 from app.models.inputs.familia.assing_familia_users import AssingFamilia

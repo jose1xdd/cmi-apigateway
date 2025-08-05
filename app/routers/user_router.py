@@ -1,4 +1,3 @@
-from dependency_injector.wiring import inject
 from fastapi import APIRouter, Depends, status
 
 from app.ioc.container import get_user_manager
