@@ -19,3 +19,11 @@ class IClientPersonas(ABC):
     @abstractmethod
     def list_personas(self, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None):
         pass
+
+    @abstractmethod
+    def assing_familia(self, body: Dict[str, Any], headers: Optional[Dict[str, str]] = None):
+        pass
+
+    @abstractmethod
+    def get_persona(self, id_persona: str, headers: Optional[Dict[str, str]] = None):
+        pass

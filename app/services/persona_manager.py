@@ -1,5 +1,7 @@
 import logging
-from app.client.ms_gestion_usuarios.interface.interface_client_personas import IClientPersonas
+
+from app.client.ms_gestion_usuarios.personas.interface.interface_client_personas import IClientPersonas
+
 
 class PersonaManager():
     def __init__(self,
@@ -19,3 +21,9 @@ class PersonaManager():
 
     def list_personas(self, page: int, page_size: int, headers):
         return self.client_personas.list_personas(page=page, page_size=page_size, headers=headers)
+
+    def assing_familia(self, data, headers):
+        return self.client_personas.assing_familia(data, headers)
+
+    def get_persona(self, id_persona: str, headers):
+        return self.client_personas.get_persona(id_persona, headers)
