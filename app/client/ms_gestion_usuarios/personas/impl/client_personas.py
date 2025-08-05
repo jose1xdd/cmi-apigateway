@@ -28,3 +28,11 @@ class ClientPersonas(IClientPersonas):
             "page_size": page_size
         }
         return requests.get(f"{self.url}/personas", params=params, headers=merged_headers)
+
+    def assing_familia(self, body: Dict[str, Any], headers: Optional[Dict[str, str]] = None):
+        merged_headers = {**JSON_HEADER, **(headers or {})}
+        return requests.patch(f"{self.url}/personas/assing-family", json=body, headers=merged_headers)
+
+    def get_persona(self, id_persona: str, headers: Optional[Dict[str, str]] = None):
+        merged_headers = {**JSON_HEADER, **(headers or {})}
+        return requests.get(f"{self.url}/personas/{id_persona}", headers=merged_headers)

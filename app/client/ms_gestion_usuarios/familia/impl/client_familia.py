@@ -24,3 +24,7 @@ class ClientFamilia(IClientFamilia):
             "page_size": page_size
         }
         return requests.get(f"{self.url}/familias", params=params, headers=merged_headers)
+
+    def get_familia(self, familia_id: int, headers: Optional[Dict[str, str]] = None):
+        merged_headers = {**JSON_HEADER, **(headers or {})}
+        return requests.get(f"{self.url}/familias/{familia_id}", headers=merged_headers)

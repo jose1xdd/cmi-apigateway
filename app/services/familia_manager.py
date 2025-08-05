@@ -21,3 +21,6 @@ class FamiliaManager:
         self.logger.info(
             f"Listando familias - Página: {page}, Tamaño: {page_size}")
         return self.client.list_familias(page, page_size, headers)
+
+    def get_familia(self, familia_id: int, headers: Optional[Dict[str, str]] = None):
+        return self.client.get_familia(familia_id, headers)

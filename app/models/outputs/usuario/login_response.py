@@ -8,11 +8,3 @@ class LoginResponse(BaseModel):
 
     class Config:
         exclude_none = True
-
-
-class EstadoResponse(BaseModel):
-    estado: str
-    message: Optional[str] = None
-
-    class Config:
-        exclude_none = True

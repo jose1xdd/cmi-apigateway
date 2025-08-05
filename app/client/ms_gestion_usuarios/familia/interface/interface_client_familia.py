@@ -19,3 +19,7 @@ class IClientFamilia(ABC):
     def list_familias(self, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None) -> requests.Response:
         """Obtiene una lista paginada de familias."""
         pass
+
+    @abstractmethod
+    def get_familia(self, familia_id: int, headers: Optional[Dict[str, str]] = None):
+        pass
