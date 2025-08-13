@@ -1,6 +1,7 @@
 import logging
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.ioc.container import Container
 from app.utils.exceptions_handlers.exceptions_handlers import (
@@ -44,4 +45,13 @@ def create_app() -> FastAPI:
         format="%(asctime)s - %(levelname)s - %(message)s",
     )
 
+    origins = ["*"]
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,        # Permitir todos los orígenes
+        allow_credentials=True,
+        allow_methods=["*"],          # Permitir todos los métodos (GET, POST, PUT, DELETE, etc.)
+        allow_headers=["*"],          # Permitir todos los headers
+    )
     return app
