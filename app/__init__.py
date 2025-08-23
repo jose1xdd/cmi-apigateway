@@ -13,7 +13,7 @@ from app.utils.exceptions_handlers.models.error_response import AppException
 from app.routers.user_router import user_router
 from app.routers.persona_router import persona_router
 from app.routers.familia_router import familia_router
-
+from app.routers.parcialidad_router import parcialidad_router
 
 def create_app() -> FastAPI:
     app = FastAPI()
@@ -39,6 +39,7 @@ def create_app() -> FastAPI:
     app.include_router(user_router, prefix="/cmi-apigateway")
     app.include_router(persona_router, prefix="/cmi-apigateway/personas")
     app.include_router(familia_router,prefix="/cmi-apigateway/familias")
+    app.include_router(parcialidad_router,prefix="/cmi-apigateway/parcialidad")
     # Logging
     logging.basicConfig(
         level=logging.INFO,
