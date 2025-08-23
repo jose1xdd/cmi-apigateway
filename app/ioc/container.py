@@ -4,6 +4,7 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import Depends
 from requests import Session
 from app.client.ms_gestion_usuarios.familia.impl.client_familia import ClientFamilia
+from app.client.ms_gestion_usuarios.parcialidad.impl.client_parcialidad import ClientParcialidad
 from app.client.ms_gestion_usuarios.personas.impl.client_personas import ClientPersonas
 from app.config.database import get_db
 from app.middlewares.middleware_auth import MiddlewarAuth
@@ -14,6 +15,7 @@ from app.services.email_service.impl.email_service import EmailService
 from app.services.familia_manager import FamiliaManager
 from app.services.hashing_service.impl.hashing_service import HashingService
 from app.services.jwt_service.impl.jwt_service import JwtService
+from app.services.parcialidad_manager import ParcialidadManager
 from app.services.persona_manager import PersonaManager
 from app.services.user_manager import UserManager
 from app.utils.enviroment import settings
@@ -53,6 +55,11 @@ class Container(containers.DeclarativeContainer):
 
     client_familia = providers.Factory(
         ClientFamilia,
+        url=settings.ms_gestion_usuarios_url
+    )
+
+    client_parcialidad = providers.Factory(
+        ClientParcialidad,
         url=settings.ms_gestion_usuarios_url
     )
 
@@ -98,3 +105,11 @@ def get_familia_manager(
     client_familia=Depends(Provide[Container.client_familia]),
 ) -> FamiliaManager:
     return FamiliaManager(client_familia, logger)
+
+
+@inject
+def get_parcialidad_manager(
+    logger: logging.Logger = Depends(Provide[Container.logger]),
+    client_parcialidad=Depends(Provide[Container.client_parcialidad])
+) -> ParcialidadManager:
+    return ParcialidadManager(client_parcialidad, logger)

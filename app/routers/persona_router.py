@@ -9,20 +9,20 @@ from app.models.outputs.paginated_response import PaginatedPersonas
 from app.models.outputs.persona.persona_output import PersonaOut
 from app.models.outputs.response_estado import EstadoResponse
 from app.services.persona_manager import PersonaManager
-from app.utils.constans import JSON_HEADER
+from app.utils.constans import BEARER_SCHEME, JSON_HEADER
 from app.utils.decorators.role_check_decorator import require_roles
 
 
 persona_router = APIRouter(tags=["Persona"])
 
 
-@persona_router.post("/create", status_code=status.HTTP_201_CREATED, response_model=EstadoResponse)
+@persona_router.post("/create", status_code=status.HTTP_201_CREATED, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def create_persona(
     data: PersonaCreate,
     claims: dict = Depends(require_roles(["admin"])),
     manager: PersonaManager = Depends(get_persona_manager),
 ):
-    external_response = manager.create_person(data, claims)
+    external_response = manager.create_person(data.model_dump(mode='json'), claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -30,14 +30,14 @@ async def create_persona(
     )
 
 
-@persona_router.put("/{id}", status_code=status.HTTP_200_OK, response_model=EstadoResponse)
+@persona_router.put("/{id}", status_code=status.HTTP_200_OK, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def update_persona(
     id: str,
     data: PersonaUpdate,
     claims: dict = Depends(require_roles(["admin"])),
     manager: PersonaManager = Depends(get_persona_manager),
 ):
-    external_response = manager.update_person(id, data, claims)
+    external_response = manager.update_person(id, data.model_dump(mode='json'), claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -45,7 +45,7 @@ async def update_persona(
     )
 
 
-@persona_router.delete("/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=EstadoResponse)
+@persona_router.delete("/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def delete_persona(
     id: str,
     claims: dict = Depends(require_roles(["admin"])),
@@ -59,7 +59,7 @@ async def delete_persona(
     )
 
 
-@persona_router.get("/", status_code=status.HTTP_200_OK, response_model=PaginatedPersonas)
+@persona_router.get("/", status_code=status.HTTP_200_OK, response_model=PaginatedPersonas, dependencies=[Depends(BEARER_SCHEME)])
 async def list_personas(
     page: int = Query(1, ge=1),
     page_size: int = Query(10, ge=1, le=100),
@@ -74,7 +74,7 @@ async def list_personas(
     )
 
 
-@persona_router.get("/{id_persona}", status_code=status.HTTP_200_OK, response_model=PersonaOut)
+@persona_router.get("/{id_persona}", status_code=status.HTTP_200_OK, response_model=PersonaOut, dependencies=[Depends(BEARER_SCHEME)])
 async def get_persona(
     id_persona: str,
     claims: dict = Depends(require_roles(["admin"])),
@@ -88,13 +88,13 @@ async def get_persona(
     )
 
 
-@persona_router.patch("/assing-family", response_model=AsignacionFamiliaResponse)
+@persona_router.patch("/assing-family", response_model=AsignacionFamiliaResponse, dependencies=[Depends(BEARER_SCHEME)])
 def assing_family_users(
     data: AssingFamilia,
     claims: dict = Depends(require_roles(["admin"])),
     manager: PersonaManager = Depends(get_persona_manager)
 ):
-    external_response = manager.assing_familia(data, claims)
+    external_response = manager.assing_familia(data.model_dump(mode='json'), claims)
 
     return Response(
         content=external_response.content,
