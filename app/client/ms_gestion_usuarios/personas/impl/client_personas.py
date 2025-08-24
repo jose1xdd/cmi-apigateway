@@ -21,12 +21,13 @@ class ClientPersonas(IClientPersonas):
         merged_headers = {**JSON_HEADER, **(headers or {})}
         return requests.delete(f"{self.url}/personas/{id_persona}", headers=merged_headers)
 
-    def list_personas(self, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None):
+    def list_personas(self, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None, filters: Optional[Dict[str, Any]] = None):
         merged_headers = {**JSON_HEADER, **(headers or {})}
         params = {
             "page": page,
             "page_size": page_size
         }
+        params = params | filters
         return requests.get(f"{self.url}/personas", params=params, headers=merged_headers)
 
     def assing_familia(self, body: Dict[str, Any], headers: Optional[Dict[str, str]] = None):
