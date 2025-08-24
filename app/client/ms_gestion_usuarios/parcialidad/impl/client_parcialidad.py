@@ -30,11 +30,12 @@ class ClientParcialidad(IClientParcialidad):
         merged_headers = {**JSON_HEADER, **(headers or {})}
         return requests.get(f"{self.url}/parcialidad/{id_parcialidad}", headers=merged_headers)
 
-    def list_parcialidades(self, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None):
+    def list_parcialidades(self, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None, filters: Optional[Dict[str, Any]] = None):
         """GET /parcialidad?page=..&page_size=.."""
         merged_headers = {**JSON_HEADER, **(headers or {})}
         params = {
             "page": page,
             "page_size": page_size
         }
+        params = params | filters
         return requests.get(f"{self.url}/parcialidad", params=params, headers=merged_headers)

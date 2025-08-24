@@ -1,4 +1,5 @@
 import logging
+from typing import Any, Dict
 
 from app.client.ms_gestion_usuarios.personas.interface.interface_client_personas import IClientPersonas
 
@@ -19,8 +20,8 @@ class PersonaManager():
     def delete_person(self, id_persona: str, headers):
         return self.client_personas.delete_persona(id_persona, headers)
 
-    def list_personas(self, page: int, page_size: int, headers):
-        return self.client_personas.list_personas(page=page, page_size=page_size, headers=headers)
+    def list_personas(self, page: int, page_size: int, headers, filters: Dict[str, Any]):
+        return self.client_personas.list_personas(page=page, page_size=page_size, headers=headers, filters=filters)
 
     def assing_familia(self, data, headers):
         return self.client_personas.assing_familia(data, headers)

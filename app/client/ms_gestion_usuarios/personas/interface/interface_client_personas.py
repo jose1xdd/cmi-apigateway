@@ -17,7 +17,7 @@ class IClientPersonas(ABC):
         pass
 
     @abstractmethod
-    def list_personas(self, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None):
+    def list_personas(self, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None, filters: Optional[Dict[str, Any]] = None):
         pass
 
     @abstractmethod
