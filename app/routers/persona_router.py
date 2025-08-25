@@ -20,7 +20,7 @@ persona_router = APIRouter(tags=["Persona"])
 @persona_router.post("/create", status_code=status.HTTP_201_CREATED, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def create_persona(
     data: PersonaCreate,
-    claims: dict = Depends(require_roles(["admin"])),
+    claims: dict = Depends(require_roles([])),
     manager: PersonaManager = Depends(get_persona_manager),
 ):
     external_response = manager.create_person(data.model_dump(mode='json'), claims)
@@ -35,7 +35,7 @@ async def create_persona(
 async def update_persona(
     id: str,
     data: PersonaUpdate,
-    claims: dict = Depends(require_roles(["admin"])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: PersonaManager = Depends(get_persona_manager),
 ):
     external_response = manager.update_person(id, data.model_dump(mode='json'), claims)
@@ -49,7 +49,7 @@ async def update_persona(
 @persona_router.delete("/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def delete_persona(
     id: str,
-    claims: dict = Depends(require_roles(["admin"])),
+    claims: dict = Depends(require_roles([])),
     manager: PersonaManager = Depends(get_persona_manager),
 ):
     external_response = manager.delete_person(id, claims)
@@ -64,7 +64,7 @@ async def delete_persona(
 async def list_personas(
     page: int = Query(1, ge=1),
     page_size: int = Query(10, ge=1, le=100),
-    claims: dict = Depends(require_roles(["admin"])),
+    claims: dict = Depends(require_roles(["usuario"])),
     filters: PersonaFilter = Depends(),
     manager: PersonaManager = Depends(get_persona_manager),
 ):
@@ -79,7 +79,7 @@ async def list_personas(
 @persona_router.get("/{id_persona}", status_code=status.HTTP_200_OK, response_model=PersonaOut, dependencies=[Depends(BEARER_SCHEME)])
 async def get_persona(
     id_persona: str,
-    claims: dict = Depends(require_roles(["admin"])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: PersonaManager = Depends(get_persona_manager),
 ):
     external_response = manager.get_persona(id_persona, claims)
@@ -93,7 +93,7 @@ async def get_persona(
 @persona_router.patch("/assing-family", response_model=AsignacionFamiliaResponse, dependencies=[Depends(BEARER_SCHEME)])
 def assing_family_users(
     data: AssingFamilia,
-    claims: dict = Depends(require_roles(["admin"])),
+    claims: dict = Depends(require_roles([])),
     manager: PersonaManager = Depends(get_persona_manager)
 ):
     external_response = manager.assing_familia(data.model_dump(mode='json'), claims)

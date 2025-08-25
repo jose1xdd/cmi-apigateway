@@ -13,12 +13,12 @@ def require_roles(permitted_roles: List[str]):
         request: Request,
         auth: MiddlewarAuth = Depends(Provide[Container.middleware_auth])
     ):
-        permitted_roles.append("usuario")
+        permitted_roles.append("admin")
         claims: TokenClaimsDict = auth.validate_token(request)
         user_role = claims.get("role")
         if user_role not in permitted_roles:
             raise AppException(
-                codigo=status.HTTP_403_FORBIDDEN,
+                codigo_http=status.HTTP_403_FORBIDDEN,
                 mensaje="No tienes permiso para acceder a este recurso"
             )
         # ❌ Elimina exp e iat del resultado

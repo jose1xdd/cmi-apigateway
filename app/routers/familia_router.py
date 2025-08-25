@@ -16,7 +16,7 @@ familia_router = APIRouter(tags=["Familia"])
 
 @familia_router.post("/create", status_code=status.HTTP_201_CREATED, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def create_familia(data: FamiliaCreate,
-                         claims: dict = Depends(require_roles(["admin"])),
+                         claims: dict = Depends(require_roles([])),
                          manager: FamiliaManager = Depends(get_familia_manager)):
     external_response = manager.create_familia(data.model_dump(mode='json'), claims)
     return Response(
@@ -28,7 +28,7 @@ async def create_familia(data: FamiliaCreate,
 
 @familia_router.delete("/{id_familia}", status_code=status.HTTP_200_OK, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def delete_familia(id_familia: int,
-                         claims: dict = Depends(require_roles(["admin"])),
+                         claims: dict = Depends(require_roles([])),
                          manager: FamiliaManager = Depends(get_familia_manager)):
     external_response = manager.delete_familia(id_familia, claims)
     return Response(
@@ -42,7 +42,7 @@ async def delete_familia(id_familia: int,
 async def list_familias(
     page: int = Query(1, ge=1),
     page_size: int = Query(10, ge=1),
-    claims: dict = Depends(require_roles(["admin"])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: FamiliaManager = Depends(get_familia_manager),
 ):
     external_response = manager.list_familias(page, page_size, claims)
@@ -56,7 +56,7 @@ async def list_familias(
 @familia_router.get("/{id_familia}", status_code=status.HTTP_200_OK, response_model=PersonaOut, dependencies=[Depends(BEARER_SCHEME)])
 async def get_familia(
     id_familia: int,
-    claims: dict = Depends(require_roles(["admin"])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: FamiliaManager = Depends(get_familia_manager),
 ):
     external_response = manager.get_familia(id_familia, claims)
