@@ -15,8 +15,8 @@ class Settings(BaseSettings):
     database_url: str = Field(..., alias="DATABASE_URL")
     secret_key: str
     algorithm: str
-    expires_in_minutes: int
-
+    access_expires_minutes: int
+    refresh_expires_days: int
     smtp_server: str
     smtp_port: int
     smtp_password: str

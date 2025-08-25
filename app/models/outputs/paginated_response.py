@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from app.models.outputs.familia.familia_output import FamiliaOut
 from app.models.outputs.parcialidad.parcialidad_output import ParcialidadOut
 from app.models.outputs.persona.persona_output import PersonaOut
+from app.models.outputs.usuario.usuario_output import UsuarioOut
+
 
 class PaginatedPersonas(BaseModel):
     total_items: int
@@ -11,14 +13,23 @@ class PaginatedPersonas(BaseModel):
     total_pages: int
     items: List[PersonaOut]
 
+
 class PaginatedFamilias(BaseModel):
     total_items: int
     current_page: int
     total_pages: int
     items: List[FamiliaOut]
 
+
 class PaginatedParcialidad(BaseModel):
     total_items: int
     current_page: int
     total_pages: int
     items: List[ParcialidadOut]
+
+
+class PaginatedUsuario(BaseModel):
+    total_items: int
+    current_page: int
+    total_pages: int
+    items: List[UsuarioOut]

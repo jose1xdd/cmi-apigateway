@@ -17,7 +17,7 @@ parcialidad_router = APIRouter(tags=["Parcialidad"])
 @parcialidad_router.post("/create", status_code=status.HTTP_201_CREATED, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def create_parcialidad(
     data: ParcialidadCreate,
-    claims: dict = Depends(require_roles(["admin"])),
+    claims: dict = Depends(require_roles([])),
     manager: ParcialidadManager = Depends(get_parcialidad_manager),
 ):
     external_response = manager.create_parcialidad(
@@ -32,7 +32,7 @@ async def create_parcialidad(
 @parcialidad_router.delete("/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def delete_parcialidad(
     id: str,
-    claims: dict = Depends(require_roles(["admin"])),
+    claims: dict = Depends(require_roles([])),
     manager: ParcialidadManager = Depends(get_parcialidad_manager),
 ):
     external_response = manager.delete_parcialidad(id, claims)
@@ -47,7 +47,7 @@ async def delete_parcialidad(
 async def list_parcialidades(
     page: int = Query(1, ge=1),
     page_size: int = Query(10, ge=1, le=100),
-    claims: dict = Depends(require_roles(["admin"])),
+    claims: dict = Depends(require_roles(["usuario"])),
     filters: ParcialidadFilter = Depends(),
     manager: ParcialidadManager = Depends(get_parcialidad_manager),
 ):
@@ -63,7 +63,7 @@ async def list_parcialidades(
 @parcialidad_router.get("/{id_parcialidad}", status_code=status.HTTP_200_OK, response_model=ParcialidadOut, dependencies=[Depends(BEARER_SCHEME)])
 async def get_parcialidad(
     id_parcialidad: str,
-    claims: dict = Depends(require_roles(["admin"])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: ParcialidadManager = Depends(get_parcialidad_manager),
 ):
     external_response = manager.get_parcialidad(id_parcialidad, claims)
@@ -78,7 +78,7 @@ async def get_parcialidad(
 async def update_parcialidad(
     id: str,
     data: ParcialidadCreate,
-    claims: dict = Depends(require_roles(["admin"])),
+    claims: dict = Depends(require_roles([])),
     manager: ParcialidadManager = Depends(get_parcialidad_manager),
 ):
     external_response = manager.update_parcialidad(

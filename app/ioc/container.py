@@ -8,6 +8,7 @@ from app.client.ms_gestion_usuarios.parcialidad.impl.client_parcialidad import C
 from app.client.ms_gestion_usuarios.personas.impl.client_personas import ClientPersonas
 from app.config.database import get_db
 from app.middlewares.middleware_auth import MiddlewarAuth
+from app.persistence.repository.persona_repository.interface.interface_persona_repository import IPersonaRepository
 from app.persistence.repository.recovery_code_repository.interface.interface_recovery_code_repository import IRecoveryCodeRepository
 from app.persistence.repository.repository_factory import RepositoryFactory
 from app.persistence.repository.user_repository.interface.interface_user_repository import IUsuarioRepository
@@ -34,7 +35,8 @@ class Container(containers.DeclarativeContainer):
 
     jwt_service = providers.Factory(
         JwtService,
-        expires_in_minutes=settings.expires_in_minutes,
+        access_expires_minutes=settings.access_expires_minutes,
+        refresh_expires_days=settings.refresh_expires_days,
         algorithm=settings.algorithm,
         secret_key=settings.secret_key
     )
@@ -85,6 +87,7 @@ def get_user_manager(
         logger=logger,
         usuario_repository=factory.get_repository(IUsuarioRepository),
         code_repository=factory.get_repository(IRecoveryCodeRepository),
+        persona_repository=factory.get_repository(IPersonaRepository),
         jwt_service=jwt_service,
         hashing_service=hashing_service,
         email_service=email_service,
