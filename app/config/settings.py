@@ -23,3 +23,4 @@ class Settings(BaseSettings):
     smtp_email: str
 
     ms_gestion_usuarios_url: str
+    ms_index_url: str
