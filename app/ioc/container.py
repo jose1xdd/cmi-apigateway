@@ -2,7 +2,7 @@ import logging
 from dependency_injector import containers, providers
 from dependency_injector.wiring import Provide, inject
 from fastapi import Depends
-from requests import Session
+from sqlalchemy.orm import Session
 from app.client.ms_gestion_usuarios.familia.impl.client_familia import ClientFamilia
 from app.client.ms_gestion_usuarios.parcialidad.impl.client_parcialidad import ClientParcialidad
 from app.client.ms_gestion_usuarios.personas.impl.client_personas import ClientPersonas
