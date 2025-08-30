@@ -6,6 +6,7 @@ from requests import Session
 from app.client.ms_gestion_usuarios.familia.impl.client_familia import ClientFamilia
 from app.client.ms_gestion_usuarios.parcialidad.impl.client_parcialidad import ClientParcialidad
 from app.client.ms_gestion_usuarios.personas.impl.client_personas import ClientPersonas
+from app.client.ms_index.impl.client_index import ClientIndex
 from app.config.database import get_db
 from app.middlewares.middleware_auth import MiddlewarAuth
 from app.persistence.repository.persona_repository.interface.interface_persona_repository import IPersonaRepository
@@ -15,6 +16,7 @@ from app.persistence.repository.user_repository.interface.interface_user_reposit
 from app.services.email_service.impl.email_service import EmailService
 from app.services.familia_manager import FamiliaManager
 from app.services.hashing_service.impl.hashing_service import HashingService
+from app.services.index_manager import IndexManager
 from app.services.jwt_service.impl.jwt_service import JwtService
 from app.services.parcialidad_manager import ParcialidadManager
 from app.services.persona_manager import PersonaManager
@@ -63,6 +65,10 @@ class Container(containers.DeclarativeContainer):
     client_parcialidad = providers.Factory(
         ClientParcialidad,
         url=settings.ms_gestion_usuarios_url
+    )
+    client_index = providers.Factory(
+        ClientIndex,
+        url=settings.ms_index_url
     )
 
     middleware_auth = providers.Factory(
@@ -116,3 +122,11 @@ def get_parcialidad_manager(
     client_parcialidad=Depends(Provide[Container.client_parcialidad])
 ) -> ParcialidadManager:
     return ParcialidadManager(client_parcialidad, logger)
+
+
+@inject
+def get_index_manager(
+    logger: logging.Logger = Depends(Provide[Container.logger]),
+    client_index=Depends(Provide[Container.client_index])
+) -> IndexManager:
+    return IndexManager(client_index, logger)
