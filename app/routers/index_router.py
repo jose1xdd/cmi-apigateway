@@ -72,11 +72,10 @@ async def get_all_publicacion(
     page: int = Query(1, ge=1),
     page_size: int = Query(10, le=100),
     filters: PublicacionFilter = Depends(),
-    claims: dict = Depends(require_roles(["usuario"])),
     manager: IndexManager = Depends(get_index_manager),
 ):
     external_response = manager.get_all_publicacion(
-        page, page_size, headers=claims, filters=filters.model_dump(exclude_none=True))
+        page, page_size, filters=filters.model_dump(exclude_none=True))
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -98,10 +97,9 @@ async def get_all_publicacion(
 )
 async def get_foto_by_id(
     foto_id: int,
-    claims: dict = Depends(require_roles([])),
     manager: IndexManager = Depends(get_index_manager),
 ):
-    external_response = manager.get_foto_by_id(foto_id, headers=claims)
+    external_response = manager.get_foto_by_id(foto_id)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
