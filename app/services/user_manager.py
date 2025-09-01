@@ -52,7 +52,7 @@ class UserManager():
             jwt = self.jwt_service.create_jwt_token(
                 data.email, user.rol.value, user.personaId)
             refresh_token = self.jwt_service.create_refresh_token(
-                data.email, user.rol.value, user.personaId)
+                data.email, user.personaId, user.rol.value)
             return {"estado": "Exitoso", "jwt": jwt, "refresh_token": refresh_token}
         return {"estado": "Fallido", "contraseña": "invalida"}
 
