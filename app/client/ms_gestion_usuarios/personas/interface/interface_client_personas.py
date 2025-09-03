@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional
+from typing import BinaryIO, Dict, Any, Optional
 
 
 class IClientPersonas(ABC):
@@ -26,4 +26,8 @@ class IClientPersonas(ABC):
 
     @abstractmethod
     def get_persona(self, id_persona: str, headers: Optional[Dict[str, str]] = None):
+        pass
+
+    @abstractmethod
+    def upload_excel(self, file: BinaryIO, headers: Optional[Dict[str, str]] = None):
         pass

@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, Query, Response, status
+from fastapi import APIRouter, Depends, File, Query, Response, UploadFile, status
 
 from app.ioc.container import get_persona_manager
 from app.models.inputs.familia.assing_familia_users import AssingFamilia
+from app.models.inputs.persona.persona_carga_masiva import CargaMasivaResponse
 from app.models.inputs.persona.persona_create import PersonaCreate
 from app.models.inputs.persona.persona_filter import PersonaFilter
 from app.models.inputs.persona.persona_update import PersonaUpdate
@@ -23,7 +24,8 @@ async def create_persona(
     claims: dict = Depends(require_roles([])),
     manager: PersonaManager = Depends(get_persona_manager),
 ):
-    external_response = manager.create_person(data.model_dump(mode='json'), claims)
+    external_response = manager.create_person(
+        data.model_dump(mode='json'), claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -38,7 +40,8 @@ async def update_persona(
     claims: dict = Depends(require_roles(["usuario"])),
     manager: PersonaManager = Depends(get_persona_manager),
 ):
-    external_response = manager.update_person(id, data.model_dump(mode='json'), claims)
+    external_response = manager.update_person(
+        id, data.model_dump(mode='json'), claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -68,7 +71,8 @@ async def list_personas(
     filters: PersonaFilter = Depends(),
     manager: PersonaManager = Depends(get_persona_manager),
 ):
-    external_response = manager.list_personas(page, page_size, claims,filters.model_dump(exclude_none=True))
+    external_response = manager.list_personas(
+        page, page_size, claims, filters.model_dump(exclude_none=True))
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -96,11 +100,26 @@ def assing_family_users(
     claims: dict = Depends(require_roles([])),
     manager: PersonaManager = Depends(get_persona_manager)
 ):
-    external_response = manager.assing_familia(data.model_dump(mode='json'), claims)
+    external_response = manager.assing_familia(
+        data.model_dump(mode='json'), claims)
 
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
         media_type=external_response.headers.get(
             "Content-Type", JSON_HEADER),
+    )
+
+
+@persona_router.post("/upload-excel", status_code=status.HTTP_201_CREATED, response_model=CargaMasivaResponse, dependencies=[Depends(BEARER_SCHEME)])
+async def upload_excel(
+    file: UploadFile = File(...),
+    claims: dict = Depends(require_roles([])),
+    manager: PersonaManager = Depends(get_persona_manager)
+):
+    response = await manager.upload_excel(file, claims)
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type=response.headers.get("Content-Type", JSON_HEADER),
     )
