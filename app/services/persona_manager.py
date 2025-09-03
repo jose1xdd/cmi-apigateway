@@ -1,6 +1,8 @@
 import logging
 from typing import Any, Dict
 
+from fastapi import UploadFile
+
 from app.client.ms_gestion_usuarios.personas.interface.interface_client_personas import IClientPersonas
 
 
@@ -28,3 +30,7 @@ class PersonaManager():
 
     def get_persona(self, id_persona: str, headers):
         return self.client_personas.get_persona(id_persona, headers)
+
+    async def upload_excel(self, file: UploadFile, headers):
+        file_bytes = await file.read()  # 👈 lee el contenido en memoria
+        return self.client_personas.upload_excel(file.filename, file_bytes, headers)

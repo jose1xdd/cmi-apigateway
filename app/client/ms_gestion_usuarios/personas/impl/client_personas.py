@@ -1,5 +1,5 @@
 import requests
-from typing import Dict, Any, Optional
+from typing import BinaryIO, Dict, Any, Optional
 
 from app.client.ms_gestion_usuarios.personas.interface.interface_client_personas import IClientPersonas
 from app.utils.constans import JSON_HEADER
@@ -37,3 +37,8 @@ class ClientPersonas(IClientPersonas):
     def get_persona(self, id_persona: str, headers: Optional[Dict[str, str]] = None):
         merged_headers = {**JSON_HEADER, **(headers or {})}
         return requests.get(f"{self.url}/personas/{id_persona}", headers=merged_headers)
+
+    def upload_excel(self, filename: str, file_bytes: bytes, headers: Optional[Dict[str, str]] = None):
+        merged_headers = {**(headers or {})}
+        files = {"file": (filename, file_bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
+        return requests.post(f"{self.url}/personas/upload-excel", files=files, headers=merged_headers)
