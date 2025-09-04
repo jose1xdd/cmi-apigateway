@@ -7,6 +7,7 @@ from app.client.ms_gestion_usuarios.familia.impl.client_familia import ClientFam
 from app.client.ms_gestion_usuarios.parcialidad.impl.client_parcialidad import ClientParcialidad
 from app.client.ms_gestion_usuarios.personas.impl.client_personas import ClientPersonas
 from app.client.ms_index.impl.client_index import ClientIndex
+from app.client.ms_reportes.impl.client_reportes import ClientReportes
 from app.config.database import get_db
 from app.middlewares.middleware_auth import MiddlewarAuth
 from app.persistence.repository.persona_repository.interface.interface_persona_repository import IPersonaRepository
@@ -20,6 +21,7 @@ from app.services.index_manager import IndexManager
 from app.services.jwt_service.impl.jwt_service import JwtService
 from app.services.parcialidad_manager import ParcialidadManager
 from app.services.persona_manager import PersonaManager
+from app.services.reporte_manager import ReporteManager
 from app.services.user_manager import UserManager
 from app.utils.enviroment import settings
 
@@ -69,6 +71,11 @@ class Container(containers.DeclarativeContainer):
     client_index = providers.Factory(
         ClientIndex,
         url=settings.ms_index_url
+    )
+
+    client_reportes = providers.Factory(
+        ClientReportes,
+        url=settings.ms_reportes_url
     )
 
     middleware_auth = providers.Factory(
@@ -130,3 +137,11 @@ def get_index_manager(
     client_index=Depends(Provide[Container.client_index])
 ) -> IndexManager:
     return IndexManager(client_index, logger)
+
+
+@inject
+def get_reportes_manager(
+    logger: logging.Logger = Depends(Provide[Container.logger]),
+    client_reportes=Depends(Provide[Container.client_reportes])
+) -> ReporteManager:
+    return ReporteManager(client_reportes, logger)

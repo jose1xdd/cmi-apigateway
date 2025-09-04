@@ -12,6 +12,7 @@
         "SMTP_EMAIL": "comunidadquillancingaconsaca@gmail.com",
         "SMTP_PASSWORD": "_SMTP_PASSWORD_",
         "MS_GESTION_USUARIOS_URL": "http://gestion-usuarios_container:8081/ms-gestion-usuarios",
-        "MS_INDEX_URL": "http://index_container:8083/ms-index"
+        "MS_INDEX_URL": "http://index_container:8083/ms-index",
+        "MS_REPORTES_URL": "http://reportes_container:8082/ms-reporte"
     }
 }

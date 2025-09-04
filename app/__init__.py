@@ -15,7 +15,7 @@ from app.routers.persona_router import persona_router
 from app.routers.familia_router import familia_router
 from app.routers.parcialidad_router import parcialidad_router
 from app.routers.index_router import index_router
-
+from app.routers.reporte_router import reportes_router
 
 def create_app() -> FastAPI:
     app = FastAPI()
@@ -41,9 +41,9 @@ def create_app() -> FastAPI:
     app.include_router(user_router, prefix="/cmi-apigateway")
     app.include_router(persona_router, prefix="/cmi-apigateway/personas")
     app.include_router(familia_router, prefix="/cmi-apigateway/familias")
-    app.include_router(parcialidad_router,
-                       prefix="/cmi-apigateway/parcialidad")
+    app.include_router(parcialidad_router, prefix="/cmi-apigateway/parcialidad")
     app.include_router(index_router, prefix="/cmi-apigateway/index")
+    app.include_router(reportes_router, prefix="/cmi-apigateway/reportes")
     # Logging
     logging.basicConfig(
         level=logging.INFO,
