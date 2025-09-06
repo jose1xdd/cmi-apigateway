@@ -1,5 +1,5 @@
 import requests
-from typing import Dict, Any, Optional
+from typing import IO, Dict, Any, Optional
 
 from app.client.ms_gestion_usuarios.parcialidad.interface.interface_client_parcialidad import IClientParcialidad
 from app.utils.constans import JSON_HEADER
@@ -39,3 +39,10 @@ class ClientParcialidad(IClientParcialidad):
         }
         params = params | filters
         return requests.get(f"{self.url}/parcialidad", params=params, headers=merged_headers)
+
+    def upload_excel(self, filename: str, file_bytes: bytes, headers: Optional[Dict[str, str]] = None):
+        """POST /parcialidad/upload-excel"""
+        merged_headers = {**(headers or {})}
+        files = {"file": (
+            filename, file_bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
+        return requests.post(f"{self.url}/parcialidad/upload-excel", files=files, headers=merged_headers)

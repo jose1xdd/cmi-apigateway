@@ -1,4 +1,7 @@
 import logging
+from typing import Any, Dict
+
+from fastapi import UploadFile
 
 from app.client.ms_gestion_usuarios.parcialidad.interface.interface_client_parcialidad import IClientParcialidad
 
@@ -31,3 +34,11 @@ class ParcialidadManager:
     def get_parcialidad(self, id_parcialidad: str, headers):
         self.logger.info("Consultando parcialidad con id %s", id_parcialidad)
         return self.client_parcialidad.get_parcialidad(id_parcialidad, headers)
+
+    async def upload_excel(self, file: UploadFile, headers: Dict[str, str]) -> Dict[str, Any]:
+        """
+        Llama al client para subir un archivo Excel de parcialidades
+        """
+        # Se abre el archivo en modo binario y se envía al client
+        file_bytes = await file.read()
+        return self.client_parcialidad.upload_excel(file.filename, file_bytes, headers)
