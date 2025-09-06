@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, Query, Response, status
+from typing import Optional
+from fastapi import APIRouter, Depends, File, Query, Response, UploadFile, status
 
 from app.ioc.container import get_parcialidad_manager
 from app.models.inputs.parcialidad.parcialidad_create import ParcialidadCreate
@@ -87,4 +88,23 @@ async def update_parcialidad(
         content=external_response.content,
         status_code=external_response.status_code,
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
+    )
+
+
+@parcialidad_router.post("/upload-excel", dependencies=[Depends(BEARER_SCHEME)])
+async def upload_excel(
+    file: UploadFile = File(...),
+    claims: dict = Depends(require_roles([])),
+    manager: ParcialidadManager = Depends(get_parcialidad_manager),
+
+):
+    """
+    Endpoint del API Gateway para cargar parcialidades vía Excel.
+    """
+
+    response = await manager.upload_excel(file, headers=claims)
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type=response.headers.get("Content-Type", JSON_HEADER),
     )

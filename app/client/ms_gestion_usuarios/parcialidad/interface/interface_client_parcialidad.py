@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional
+from typing import IO, Dict, Any, Optional
 from abc import ABC, abstractmethod
 
 
@@ -23,3 +23,6 @@ class IClientParcialidad(ABC):
     @abstractmethod
     def list_parcialidades(self, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None, filters: Optional[Dict[str, Any]] = None):
         """GET /parcialidad?page=..&page_size=.."""
+    @abstractmethod
+    def upload_excel(self, file: IO, headers: Optional[Dict[str, str]] = None):
+        pass
