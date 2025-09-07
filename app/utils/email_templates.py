@@ -135,4 +135,73 @@ TEMPORARY_PASSWORD_TEMPLATE = """
 </html>
 """
 
+USER_CREATION_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Usuario Creado - Contraseña Provisional</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+    }
+    h2 {
+      color: #333333;
+    }
+    p {
+      color: #555555;
+      line-height: 1.6;
+    }
+    .code-box {
+      background-color: #f0f0f0;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #28a745;
+      letter-spacing: 2px;
+      margin: 20px 0;
+    }
+    .footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #999999;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>¡Tu usuario ha sido creado exitosamente!</h2>
+    <p>Hola</p>
+    <p>Nos complace informarte que tu cuenta en el sistema ha sido creada correctamente. Para ingresar por primera vez, utiliza la siguiente contraseña:</p>
+
+    <div class="code-box">{{password}}</div>
+
+    <p>Por razones de seguridad, te recomendamos cambiar esta contraseña inmediatamente después de iniciar sesión.</p>
+
+    <p>Si no esperabas la creación de esta cuenta, por favor comunícate con el área de soporte.</p>
+
+    <p>Gracias por hacer parte de nuestra comunidad.</p>
+
+    <div class="footer">
+      © 2025 Comunidad Indígena Quillacinga del municipio de Consacá. Todos los derechos reservados.
+    </div>
+  </div>
+</body>
+</html>
+"""
+
 
