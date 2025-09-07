@@ -116,11 +116,12 @@ class UserManager():
         if email_used is not None:
             self.logger.error(f"El email {data.email} ya está registrado")
             raise AppException("El email ya se encuentra registrado")
+        unhashed_password = data.password
         data.password = self.hashing_service.hash_password(data.password)
         self.usuario_repository.create(data)
         self.logger.info(
             f"Usuario creado exitosamente con email: {data.email}")
-
+        self.email_service.send_email_create(data.email, unhashed_password)
         return EstadoResponse(estado="Exitoso", message="Usuario creado exitosamente")
 
     def delete_user(self, email: str) -> EstadoResponse:
