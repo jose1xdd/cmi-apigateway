@@ -25,3 +25,4 @@ class Settings(BaseSettings):
     ms_gestion_usuarios_url: str
     ms_index_url: str
     ms_reportes_url: str
+    ms_gestion_reuniones: str
