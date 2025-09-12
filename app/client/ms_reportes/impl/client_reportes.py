@@ -15,3 +15,11 @@ class ClientReportes(IClientReportes):
             headers=merged_headers,
             stream=True
         )
+
+    def get_reporte_asistencia(self, reunion_id: int, headers: Optional[Dict[str, str]] = None):
+        merged_headers = {**JSON_HEADER, **(headers or {})}
+        return requests.get(
+            f"{self.url}/reporte/asistencia/{reunion_id}",
+            headers=merged_headers,
+            stream=True
+        )

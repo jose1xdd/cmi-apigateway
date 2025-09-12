@@ -3,7 +3,8 @@ from dependency_injector import containers, providers
 from dependency_injector.wiring import Provide, inject
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from app.client.ms_gestion_reuniones.impl.gestion_reuniones import ClientReunion
+from app.client.ms_gestion_reuniones.asistencia.impl.client_asistencia import ClientAsistencia
+from app.client.ms_gestion_reuniones.reunion.impl.gestion_reuniones import ClientReunion
 from app.client.ms_gestion_usuarios.familia.impl.client_familia import ClientFamilia
 from app.client.ms_gestion_usuarios.parcialidad.impl.client_parcialidad import ClientParcialidad
 from app.client.ms_gestion_usuarios.personas.impl.client_personas import ClientPersonas
@@ -15,6 +16,7 @@ from app.persistence.repository.persona_repository.interface.interface_persona_r
 from app.persistence.repository.recovery_code_repository.interface.interface_recovery_code_repository import IRecoveryCodeRepository
 from app.persistence.repository.repository_factory import RepositoryFactory
 from app.persistence.repository.user_repository.interface.interface_user_repository import IUsuarioRepository
+from app.services.asistencia_manager import AsistenciaManager
 from app.services.email_service.impl.email_service import EmailService
 from app.services.familia_manager import FamiliaManager
 from app.services.hashing_service.impl.hashing_service import HashingService
@@ -83,6 +85,10 @@ class Container(containers.DeclarativeContainer):
     client_reunion = providers.Factory(
         ClientReunion,
         url=settings.ms_gestion_reuniones
+    )
+    client_asistencia = providers.Factory(
+        ClientAsistencia,
+        url=settings.ms_gestion_reuniones  # asegúrate de tener esta var en settings
     )
 
     middleware_auth = providers.Factory(
@@ -160,3 +166,11 @@ def get_reunion_manager(
     client_reunion=Depends(Provide[Container.client_reunion])
 ) -> ReunionManager:
     return ReunionManager(client_reunion, logger)
+
+
+@inject
+def get_asistencia_manager(
+    logger: logging.Logger = Depends(Provide[Container.logger]),
+    client_asistencia=Depends(Provide[Container.client_asistencia]),
+) -> AsistenciaManager:
+    return AsistenciaManager(client_asistencia, logger)

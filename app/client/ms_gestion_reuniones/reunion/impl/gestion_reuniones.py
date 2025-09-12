@@ -1,7 +1,7 @@
 import requests
 from typing import Dict, Any, Optional
 
-from app.client.ms_gestion_reuniones.interface.interface_gestion_reuniones import IClientReunion
+from app.client.ms_gestion_reuniones.reunion.interface.interface_gestion_reuniones import IClientReunion
 from app.utils.constans import JSON_HEADER
 
 
