@@ -47,3 +47,9 @@ class PaginatedReunion(BaseModel):
     current_page: int
     total_pages: int
     items: List[ReunionOut]
+
+class PaginatedReunion(BaseModel):
+    total_items: int
+    current_page: int
+    total_pages: int
+    items: List[ReunionOut]

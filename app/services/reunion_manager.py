@@ -1,7 +1,8 @@
 import logging
 from typing import Any, Dict
 
-from app.client.ms_gestion_reuniones.interface.interface_gestion_reuniones import IClientReunion
+from app.client.ms_gestion_reuniones.reunion.interface.interface_gestion_reuniones import IClientReunion
+
 
 
 class ReunionManager:

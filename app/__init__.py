@@ -17,6 +17,7 @@ from app.routers.parcialidad_router import parcialidad_router
 from app.routers.index_router import index_router
 from app.routers.reporte_router import reportes_router
 from app.routers.reuniones_router import reunion_router
+from app.routers.asistencia_router import asistencia_router
 def create_app() -> FastAPI:
     app = FastAPI()
 
@@ -45,6 +46,7 @@ def create_app() -> FastAPI:
     app.include_router(index_router, prefix="/cmi-apigateway/index")
     app.include_router(reportes_router, prefix="/cmi-apigateway/reportes")
     app.include_router(reunion_router,prefix="/cmi-apigateway/reunion")
+    app.include_router(asistencia_router,prefix="/cmi-apigateway/asistencia")
     # Logging
     logging.basicConfig(
         level=logging.INFO,
