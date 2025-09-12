@@ -70,4 +70,3 @@ async def delete_asistencia(
         status_code=external_response.status_code,
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
     )
-

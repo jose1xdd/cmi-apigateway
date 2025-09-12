@@ -111,3 +111,21 @@ async def delete_reunion(
         status_code=external_response.status_code,
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
     )
+
+@reunion_router.patch(
+    "/{reunion_id}/generate-asistencia-code",
+    status_code=status.HTTP_200_OK,
+    response_model=EstadoResponse,
+    dependencies=[Depends(BEARER_SCHEME)],
+)
+async def generate_asistencia_code(
+    reunion_id: int,
+    claims: dict = Depends(require_roles([])),
+    manager: ReunionManager = Depends(get_reunion_manager),
+):
+    external_response = manager.generate_asistencia_code(reunion_id, claims)
+    return Response(
+        content=external_response.content,
+        status_code=external_response.status_code,
+        media_type=external_response.headers.get("Content-Type", JSON_HEADER),
+    )

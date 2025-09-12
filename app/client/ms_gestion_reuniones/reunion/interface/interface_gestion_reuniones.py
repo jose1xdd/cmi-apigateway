@@ -33,3 +33,7 @@ class IClientReunion(ABC):
     def delete_reunion(self, reunion_id: int, headers: Optional[Dict[str, str]] = None):
         """Elimina una reunión por su ID"""
         pass
+
+    @abstractmethod
+    def generate_reunion_code(self, reunion_id: int, headers: Optional[Dict[str, str]] = None):
+        pass
