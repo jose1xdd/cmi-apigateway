@@ -29,3 +29,7 @@ class ReunionManager:
     def delete_reunion(self, reunion_id: int, headers):
         self.logger.info(f"Eliminando reunión con ID {reunion_id}")
         return self.client_reunion.delete_reunion(reunion_id, headers)
+
+    def generate_asistencia_code(self, reunion_id: int, headers: Dict[str, Any]):
+        self.logger.info(f"Generando código de asistencia para reunión {reunion_id}")
+        return self.client_reunion.generate_reunion_code(reunion_id, headers)
