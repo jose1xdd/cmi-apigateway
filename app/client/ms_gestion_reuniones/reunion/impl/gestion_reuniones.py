@@ -44,3 +44,7 @@ class ClientReunion(IClientReunion):
     def generate_reunion_code(self, reunion_id: int, headers: Optional[Dict[str, str]] = None):
         merged_headers = {**JSON_HEADER, **(headers or {})}
         return requests.patch(f"{self.url}/reunion/{reunion_id}/generate-asistencia-code", headers=merged_headers)
+
+    def delete_reunion_code(self, reunion_id: int, headers: Optional[Dict[str, str]] = None):
+        merged_headers = {**JSON_HEADER, **(headers or {})}
+        return requests.patch(f"{self.url}/reunion/{reunion_id}/delete-asistencia-code", headers=merged_headers)

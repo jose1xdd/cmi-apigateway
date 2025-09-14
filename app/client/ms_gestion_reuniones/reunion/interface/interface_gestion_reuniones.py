@@ -37,3 +37,7 @@ class IClientReunion(ABC):
     @abstractmethod
     def generate_reunion_code(self, reunion_id: int, headers: Optional[Dict[str, str]] = None):
         pass
+    
+    @abstractmethod
+    def delete_reunion_code(self, reunion_id: int, headers: Optional[Dict[str, str]] = None):
+        pass

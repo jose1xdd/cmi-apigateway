@@ -4,7 +4,6 @@ from typing import Any, Dict
 from app.client.ms_gestion_reuniones.reunion.interface.interface_gestion_reuniones import IClientReunion
 
 
-
 class ReunionManager:
     def __init__(self, client_reunion: IClientReunion, logger: logging.Logger):
         self.client_reunion = client_reunion
@@ -19,7 +18,8 @@ class ReunionManager:
         return self.client_reunion.get_reunion(reunion_id, headers)
 
     def list_reuniones(self, page: int, page_size: int, headers, filters: Dict[str, Any]):
-        self.logger.info(f"Listando reuniones: page={page}, page_size={page_size}, filtros={filters}")
+        self.logger.info(
+            f"Listando reuniones: page={page}, page_size={page_size}, filtros={filters}")
         return self.client_reunion.list_reuniones(page=page, page_size=page_size, headers=headers, filters=filters)
 
     def update_reunion(self, reunion_id: int, data, headers):
@@ -31,5 +31,11 @@ class ReunionManager:
         return self.client_reunion.delete_reunion(reunion_id, headers)
 
     def generate_asistencia_code(self, reunion_id: int, headers: Dict[str, Any]):
-        self.logger.info(f"Generando código de asistencia para reunión {reunion_id}")
+        self.logger.info(
+            f"Generando código de asistencia para reunión {reunion_id}")
         return self.client_reunion.generate_reunion_code(reunion_id, headers)
+
+    def delete_asistencia_code(self, reunion_id: int, headers: Dict[str, Any]):
+        self.logger.info(
+            f"Eliminando codigo de asistencia para la reunion {reunion_id}")
+        return self.client_reunion.delete_reunion_code(reunion_id, headers)
