@@ -23,3 +23,7 @@ class AsistenciaManager:
             f"Eliminando asistencia para persona_id={persona_id} en reunion_id={reunion_id}"
         )
         return self.client_asistencia.delete_asistencia(reunion_id, persona_id, headers)
+
+    def get_personas_with_asistencia(self, page: int, page_size: int, reunion_id: int, claims: dict):
+        headers = {"Authorization": f"Bearer {claims.get('token')}"} if claims else {}
+        return self.client_asistencia.get_personas_with_asistencia(reunion_id, page, page_size, headers)

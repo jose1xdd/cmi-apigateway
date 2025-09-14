@@ -55,3 +55,20 @@ class ClientAsistencia(IClientAsistencia):
             f"{self.url}/asistencia/{reunion_id}/{persona_id}",
             headers=merged_headers
         )
+
+    def get_personas_with_asistencia(
+        self,
+        reunion_id: int,
+        page: int,
+        page_size: int,
+        headers: Optional[Dict[str, str]] = None
+    ):
+        """
+        Obtiene listado paginado de personas con cruce de asistencia
+        """
+        merged_headers = {**JSON_HEADER, **(headers or {})}
+        return requests.get(
+            f"{self.url}/asistencia/{reunion_id}/personas",
+            params={"page": page, "page_size": page_size},
+            headers=merged_headers
+        )

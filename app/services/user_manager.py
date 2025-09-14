@@ -7,6 +7,7 @@ from app.models.inputs.usuario.user_create import UsuarioCreate
 from app.models.inputs.usuario.user_update import UsuarioUpdate
 from app.models.outputs.response_estado import EstadoResponse
 from app.persistence.model.codigo_recuperacion import CodigoRecuperacion
+from app.persistence.model.persona import Persona
 from app.persistence.model.usuario import Usuario
 from app.persistence.repository.persona_repository.interface.interface_persona_repository import IPersonaRepository
 from app.persistence.repository.recovery_code_repository.interface.interface_recovery_code_repository import IRecoveryCodeRepository
@@ -45,6 +46,9 @@ class UserManager():
             self.logger.error("usuario no existente")
             raise AppException(mensaje="Usuario no Existente",
                                codigo_http=status.HTTP_400_BAD_REQUEST)
+        persona: Persona = self.persona_repository.get(user.personaId)
+        if persona.activo is False:
+            raise AppException("Usuario deshabilitado")
         verify_password = self.hashing_service.verify_password(
             user.password, hashed_pasword)
         if (verify_password):
