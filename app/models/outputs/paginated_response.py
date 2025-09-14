@@ -1,6 +1,7 @@
 from typing import List
 from pydantic import BaseModel
 
+from app.models.outputs.asistencia.asistencia_out import PersonaAsistenciaOut
 from app.models.outputs.familia.familia_output import FamiliaOut
 from app.models.outputs.parcialidad.parcialidad_output import ParcialidadOut
 from app.models.outputs.persona.persona_output import PersonaOut
@@ -53,3 +54,9 @@ class PaginatedReunion(BaseModel):
     current_page: int
     total_pages: int
     items: List[ReunionOut]
+
+class PaginatedAsistenciaPersonas(BaseModel):
+    total_items: int
+    current_page: int
+    total_pages: int
+    items: List[PersonaAsistenciaOut]

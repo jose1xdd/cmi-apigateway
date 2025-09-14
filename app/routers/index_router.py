@@ -65,8 +65,7 @@ async def agregar_fotos(
 @index_router.get(
     "",
     status_code=status.HTTP_200_OK,
-    response_model=PaginatedPublicacion,
-    dependencies=[Depends(BEARER_SCHEME)],
+    response_model=PaginatedPublicacion
 )
 async def get_all_publicacion(
     page: int = Query(1, ge=1),
@@ -92,8 +91,7 @@ async def get_all_publicacion(
             "description": "Imagen en binario",
         },
         404: {"description": "Foto no encontrada"},
-    },
-    dependencies=[Depends(BEARER_SCHEME)],
+    }
 )
 async def get_foto_by_id(
     foto_id: int,

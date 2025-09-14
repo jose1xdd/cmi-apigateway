@@ -33,3 +33,7 @@ class IClientAsistencia(ABC):
     ):
         """Elimina una asistencia por ID"""
         pass
+
+    @abstractmethod
+    def get_personas_with_asistencia(self, page: int, page_size: int, reunion_id: int, claims: dict):
+        pass
