@@ -24,6 +24,8 @@ class AsistenciaManager:
         )
         return self.client_asistencia.delete_asistencia(reunion_id, persona_id, headers)
 
-    def get_personas_with_asistencia(self, page: int, page_size: int, reunion_id: int, claims: dict):
-        headers = {"Authorization": f"Bearer {claims.get('token')}"} if claims else {}
+    def get_personas_with_asistencia(self, page: int, page_size: int, reunion_id: int, headers):
         return self.client_asistencia.get_personas_with_asistencia(reunion_id, page, page_size, headers)
+
+    def get_asistencia_persona(self, persona_id: int, reunion_id: int, headers):
+        return self.client_asistencia.get_asistencia_persona(persona_id, reunion_id, headers)

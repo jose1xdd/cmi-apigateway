@@ -72,3 +72,10 @@ class ClientAsistencia(IClientAsistencia):
             params={"page": page, "page_size": page_size},
             headers=merged_headers
         )
+
+    def get_asistencia_persona(self, persona_id: int, reunion_id: int, headers):
+        merged_headers = {**JSON_HEADER, **(headers or {})}
+        return requests.get(
+            f"{self.url}/asistencia/{reunion_id}/persona/{persona_id}",
+            headers=merged_headers
+        )
