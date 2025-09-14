@@ -110,7 +110,7 @@ def get_personas_with_asistencia(
     reunion_id: int,
     persona_id: int,
     asistencia_manager: AsistenciaManager = Depends(get_asistencia_manager),
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(['usuario'])),
 
 ):
     external_response = asistencia_manager.get_asistencia_persona(persona_id, reunion_id, claims)
