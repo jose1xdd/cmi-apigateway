@@ -3,6 +3,7 @@ import logging
 from app.models.inputs.usuario.login_input import LoginInput
 from app.models.inputs.usuario.recovery_password_input import RecoveryPassword
 from app.models.inputs.usuario.reste_password_input import ResetPassword
+from app.models.inputs.usuario.update_password import UpdatePassword
 from app.models.inputs.usuario.user_create import UsuarioCreate
 from app.models.inputs.usuario.user_update import UsuarioUpdate
 from app.models.outputs.response_estado import EstadoResponse
@@ -39,26 +40,28 @@ class UserManager():
         self.code_repository = code_repository
 
     def login(self, data: LoginInput):
-        self.logger.info("se inicia el proceso de loggin")
-        hashed_pasword = self.hashing_service.hash_password(data.password)
-        user: Usuario = self.usuario_repository.get_by_email(data.email)
-        if (not user):
-            self.logger.error("usuario no existente")
-            raise AppException(mensaje="Usuario no Existente",
-                               codigo_http=status.HTTP_400_BAD_REQUEST)
-        persona: Persona = self.persona_repository.get(user.personaId)
-        if persona.activo is False:
-            raise AppException("Usuario deshabilitado")
-        verify_password = self.hashing_service.verify_password(
-            user.password, hashed_pasword)
-        if (verify_password):
-            self.logger.info("contraseña validada generando jwt")
-            jwt = self.jwt_service.create_jwt_token(
-                data.email, user.rol.value, user.personaId)
-            refresh_token = self.jwt_service.create_refresh_token(
-                data.email, user.personaId, user.rol.value)
-            return {"estado": "Exitoso", "jwt": jwt, "refresh_token": refresh_token}
-        return {"estado": "Fallido", "contraseña": "invalida"}
+        try:
+            self.logger.info("se inicia el proceso de loggin")
+            hashed_pasword = self.hashing_service.hash_password(data.password)
+            user: Usuario = self.usuario_repository.get_by_email(data.email)
+            if (not user):
+                self.logger.error("usuario no existente")
+                raise AppException(mensaje="Usuario no Existente",
+                                   codigo_http=status.HTTP_400_BAD_REQUEST)
+            persona: Persona = self.persona_repository.get(user.personaId)
+            if persona.activo is False:
+                raise AppException("Usuario deshabilitado")
+            verify_password = self.hashing_service.verify_password(
+                user.password, hashed_pasword)
+            if (verify_password):
+                self.logger.info("contraseña validada generando jwt")
+                jwt = self.jwt_service.create_jwt_token(
+                    data.email, user.rol.value, user.personaId)
+                refresh_token = self.jwt_service.create_refresh_token(
+                    data.email, user.personaId, user.rol.value)
+                return {"estado": "Exitoso", "jwt": jwt, "refresh_token": refresh_token}
+        except Exception:
+            return {"estado": "Fallido", "contraseña": "invalida"}
 
     def refresh_token(self, refresh_token: str):
         jwt = self.jwt_service.refresh_access_token(refresh_token)
@@ -156,4 +159,12 @@ class UserManager():
         if email_user is not None:
             raise AppException("El email a cambiar ya esta usado")
         self.usuario_repository.update(email, data)
+        return EstadoResponse(estado="Exitoso", message="Usuario actualizado")
+
+    def update_password(self, user_email: str, data: UpdatePassword):
+        user: Usuario = self.usuario_repository.get_by_email(user_email)
+        if user is None:
+            raise AppException("Usuario a actualizar no existe")
+        hashed_password = self.hashing_service.hash_password(data.password)
+        self.usuario_repository.update_password(user_email, hashed_password)
         return EstadoResponse(estado="Exitoso", message="Usuario actualizado")
