@@ -1,8 +1,9 @@
 
-from fastapi import APIRouter, Depends, Query, Response, status
+from fastapi import APIRouter, Depends, File, Query, Response, UploadFile, status
 
 from app.ioc.container import get_familia_manager
 from app.models.inputs.familia.familia_create import FamiliaCreate
+from app.models.inputs.persona.persona_carga_masiva import CargaMasivaResponse
 from app.models.outputs.paginated_response import PaginatedFamilias
 from app.models.outputs.persona.persona_output import PersonaOut
 from app.models.outputs.response_estado import EstadoResponse
@@ -64,4 +65,17 @@ async def get_familia(
         content=external_response.content,
         status_code=external_response.status_code,
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
+    )
+
+@familia_router.post("/upload-excel", status_code=status.HTTP_201_CREATED, response_model=CargaMasivaResponse, dependencies=[Depends(BEARER_SCHEME)])
+async def upload_excel(
+    file: UploadFile = File(...),
+    claims: dict = Depends(require_roles([])),
+    manager: FamiliaManager = Depends(get_familia_manager)
+):
+    response = await manager.upload_excel(file, claims)
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type=response.headers.get("Content-Type", JSON_HEADER),
     )

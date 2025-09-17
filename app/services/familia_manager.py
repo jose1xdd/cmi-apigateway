@@ -1,6 +1,8 @@
 import logging
 from typing import Dict, Any, Optional
 
+from fastapi import UploadFile
+
 from app.client.ms_gestion_usuarios.familia.interface.interface_client_familia import IClientFamilia
 
 
@@ -24,3 +26,7 @@ class FamiliaManager:
 
     def get_familia(self, familia_id: int, headers: Optional[Dict[str, str]] = None):
         return self.client.get_familia(familia_id, headers)
+
+    async def upload_excel(self, file: UploadFile, headers):
+        file_bytes = await file.read()  # 👈 lee el contenido en memoria
+        return self.client.upload_excel(file.filename, file_bytes, headers)
