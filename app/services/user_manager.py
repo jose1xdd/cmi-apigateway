@@ -60,8 +60,9 @@ class UserManager():
                 refresh_token = self.jwt_service.create_refresh_token(
                     data.email, user.personaId, user.rol.value)
                 return {"estado": "Exitoso", "jwt": jwt, "refresh_token": refresh_token}
+            return {"estado": "No se pudo iniciar la Sesion"}
         except Exception:
-            return {"estado": "Fallido", "contraseña": "invalida"}
+            return {"estado": "No se pudo iniciar la Sesion"}
 
     def refresh_token(self, refresh_token: str):
         jwt = self.jwt_service.refresh_access_token(refresh_token)
