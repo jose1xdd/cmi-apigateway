@@ -6,6 +6,7 @@ from app.models.inputs.usuario.login_input import LoginInput
 from app.models.inputs.usuario.recovery_password_input import RecoveryPassword
 from app.models.inputs.usuario.refresh_input import RefreshRequest
 from app.models.inputs.usuario.reste_password_input import ResetPassword
+from app.models.inputs.usuario.update_password import UpdatePassword
 from app.models.inputs.usuario.user_create import UsuarioCreate
 from app.models.inputs.usuario.user_filter import UsuarioFilter
 from app.models.inputs.usuario.user_update import UsuarioUpdate
@@ -27,6 +28,17 @@ async def login(
     manager: UserManager = Depends(get_user_manager),
 ):
     return manager.login(data)
+
+
+@user_router.patch("/{user_email}/password/update", response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
+async def login(
+    data: UpdatePassword,
+    user_email: str,
+    _: bool = Depends(validar_email_admin),
+    manager: UserManager = Depends(get_user_manager),
+):
+    response = manager.update_password(user_email, data)
+    return JSONResponse(content=response.model_dump(exclude_none=True), status_code=200)
 
 
 @user_router.post("/refresh", response_model=LoginResponse)
