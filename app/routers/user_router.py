@@ -31,7 +31,7 @@ async def login(
 
 
 @user_router.patch("/{user_email}/password/update", response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
-async def login(
+async def update_password(
     data: UpdatePassword,
     user_email: str,
     _: bool = Depends(validar_email_admin),
