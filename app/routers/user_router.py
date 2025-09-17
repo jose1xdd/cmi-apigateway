@@ -75,7 +75,7 @@ async def delete(
     return JSONResponse(content=response.model_dump(exclude_none=True), status_code=200)
 
 
-@user_router.get("", response_model=PaginatedUsuario, dependencies=[Depends(BEARER_SCHEME)])
+@user_router.get("/", response_model=PaginatedUsuario, dependencies=[Depends(BEARER_SCHEME)])
 def get_usuario(
     page: int = Query(1, ge=1),
     page_size: int = Query(10, le=100),
