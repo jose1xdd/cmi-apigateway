@@ -152,8 +152,8 @@ class UserManager():
         user = self.usuario_repository.get_by_email(email)
         if user is None:
             raise AppException("Usuario a actualizar no existe")
-        email = self.usuario_repository.get_by_email(data.email)
-        if email is not None:
+        email_user = self.usuario_repository.get_by_email(data.email)
+        if email_user is not None:
             raise AppException("El email a cambiar ya esta usado")
         self.usuario_repository.update(email, data)
         return EstadoResponse(estado="Exitoso", message="Usuario actualizado")
