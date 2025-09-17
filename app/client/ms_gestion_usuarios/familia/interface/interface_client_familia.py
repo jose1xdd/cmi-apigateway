@@ -20,3 +20,7 @@ class IClientFamilia(ABC):
     @abstractmethod
     def get_familia(self, familia_id: int, headers: Optional[Dict[str, str]] = None):
         pass
+
+    @abstractmethod
+    def upload_excel(self, filename: str, file_bytes: bytes, headers: Optional[Dict[str, str]] = None):
+        pass
