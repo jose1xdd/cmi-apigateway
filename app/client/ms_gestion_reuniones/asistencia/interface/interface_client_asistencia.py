@@ -35,7 +35,16 @@ class IClientAsistencia(ABC):
         pass
 
     @abstractmethod
-    def get_personas_with_asistencia(self, page: int, page_size: int, reunion_id: int, claims: dict):
+    def get_personas_with_asistencia(
+        self,
+        reunion_id: int,
+        page: int,
+        page_size: int,
+        headers: Optional[Dict[str, str]] = None,
+        numero_documento: Optional[str] = None,
+        nombre: Optional[str] = None,
+        apellido: Optional[str] = None
+    ):
         pass
 
     @abstractmethod
