@@ -61,15 +61,31 @@ class ClientAsistencia(IClientAsistencia):
         reunion_id: int,
         page: int,
         page_size: int,
-        headers: Optional[Dict[str, str]] = None
+        headers: Optional[Dict[str, str]] = None,
+        numero_documento: Optional[str] = None,
+        nombre: Optional[str] = None,
+        apellido: Optional[str] = None
     ):
         """
         Obtiene listado paginado de personas con cruce de asistencia
         """
         merged_headers = {**JSON_HEADER, **(headers or {})}
+
+        params = {
+            "page": page,
+            "page_size": page_size
+        }
+
+        if numero_documento:
+            params["numero_documento"] = numero_documento
+        if nombre:
+            params["nombre"] = nombre
+        if apellido:
+            params["apellido"] = apellido
+
         return requests.get(
             f"{self.url}/asistencia/{reunion_id}/personas",
-            params={"page": page, "page_size": page_size},
+            params=params,
             headers=merged_headers
         )
 

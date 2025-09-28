@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, Depends, Query, Response, status
 
 from app.ioc.container import get_asistencia_manager
@@ -79,25 +80,38 @@ async def delete_asistencia(
 
 @asistencia_router.get(
     "/{reunion_id}/personas",
-    response_model=PaginatedAsistenciaPersonas,
     status_code=status.HTTP_200_OK,
-    dependencies=[Depends(BEARER_SCHEME)]
+    dependencies=[Depends(BEARER_SCHEME)],
 )
 def get_personas_with_asistencia(
     reunion_id: int,
     page: int = Query(1, ge=1, description="Número de página"),
     page_size: int = Query(
         10, ge=1, le=100, description="Cantidad de registros por página"),
+    numero_documento: Optional[str] = Query(
+        None, description="Número de documento para filtrar"),
+    nombre: Optional[str] = Query(
+        None, description="Nombre de la persona para filtrar"),
+    apellido: Optional[str] = Query(
+        None, description="Apellido de la persona para filtrar"),
     claims: dict = Depends(require_roles([])),
     manager: AsistenciaManager = Depends(get_asistencia_manager)
 ):
     external_response = manager.get_personas_with_asistencia(
-        page, page_size, reunion_id, claims)
+        page=page,
+        page_size=page_size,
+        reunion_id=reunion_id,
+        headers=claims,
+        numero_documento=numero_documento,
+        nombre=nombre,
+        apellido=apellido
+    )
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
     )
+
 
 
 @asistencia_router.get(
