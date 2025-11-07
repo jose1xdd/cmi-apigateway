@@ -1,13 +1,11 @@
 import logging
 from typing import Dict, Any, Optional
-
 from fastapi import UploadFile
-
 from app.client.ms_gestion_usuarios.familia.interface.interface_client_familia import IClientFamilia
 
 
 class FamiliaManager:
-    def __init__(self, client: IClientFamilia, logger: logging.getLogger):
+    def __init__(self, client: IClientFamilia, logger: logging.Logger):
         self.client = client
         self.logger = logger
 
@@ -20,13 +18,33 @@ class FamiliaManager:
         return self.client.delete_familia(id_familia, headers)
 
     def list_familias(self, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None):
-        self.logger.info(
-            f"Listando familias - Página: {page}, Tamaño: {page_size}")
+        self.logger.info(f"Listando familias - Página: {page}, Tamaño: {page_size}")
         return self.client.list_familias(page, page_size, headers)
 
-    def get_familia(self, familia_id: int, headers: Optional[Dict[str, str]] = None):
-        return self.client.get_familia(familia_id, headers)
+    def search_familias(self, query: str, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None):
+        self.logger.info(f"Buscando familias con criterio: {query}")
+        return self.client.search_familias(query, page, page_size, headers)
+
+    def get_familias_leaderdata(self, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None):
+        self.logger.info("Obteniendo datos de familias con líder y parcialidad")
+        return self.client.get_familias_leaderdata(page, page_size, headers)
+
+    def get_miembros_familia(self, id_familia: int, page: int = 1, page_size: int = 10, query: Optional[str] = None, headers: Optional[Dict[str, str]] = None):
+        self.logger.info(f"Obteniendo miembros de la familia {id_familia}")
+        return self.client.get_miembros_familia(id_familia, page, page_size, query, headers)
+
+    def get_familia_resumen(self, id_familia: int, headers: Optional[Dict[str, str]] = None):
+        self.logger.info(f"Obteniendo resumen de la familia {id_familia}")
+        return self.client.get_familia_resumen(id_familia, headers)
+
+    def get_estadisticas_generales(self, headers: Optional[Dict[str, str]] = None):
+        self.logger.info("Consultando estadísticas generales")
+        return self.client.get_estadisticas_generales(headers)
+
+    def get_familia(self, id_familia: int, headers: Optional[Dict[str, str]] = None):
+        self.logger.info(f"Obteniendo familia con ID: {id_familia}")
+        return self.client.get_familia(id_familia, headers)
 
     async def upload_excel(self, file: UploadFile, headers):
-        file_bytes = await file.read()  # 👈 lee el contenido en memoria
+        file_bytes = await file.read()
         return self.client.upload_excel(file.filename, file_bytes, headers)

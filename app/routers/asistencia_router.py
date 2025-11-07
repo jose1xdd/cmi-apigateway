@@ -5,7 +5,6 @@ from app.ioc.container import get_asistencia_manager
 from app.models.inputs.asistencia.asistencia_assing import AssingAsistencia
 from app.models.inputs.asistencia.asistencia_persona import AsistenciaIndividual
 from app.models.inputs.asistencia.user_asistencia_assing import UserAssingAsistencia
-from app.models.outputs.paginated_response import PaginatedAsistenciaPersonas
 from app.models.outputs.response_estado import EstadoResponse
 from app.services.asistencia_manager import AsistenciaManager
 from app.utils.constans import BEARER_SCHEME, JSON_HEADER
