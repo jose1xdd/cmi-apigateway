@@ -3,15 +3,14 @@ from fastapi import APIRouter, Depends, Query, Response, status
 
 from app.ioc.container import get_asistencia_manager
 from app.models.inputs.asistencia.asistencia_assing import AssingAsistencia
-from app.models.inputs.asistencia.asistencia_persona import AsistenciaIndividual
-from app.models.inputs.asistencia.user_asistencia_assing import UserAssingAsistencia
+from app.models.inputs.asistencia.user_asistencia_assing import UserRegisterAsistencia
 from app.models.outputs.response_estado import EstadoResponse
-from app.services.asistencia_manager import AsistenciaManager
 from app.utils.constans import BEARER_SCHEME, JSON_HEADER
 from app.utils.decorators.role_check_decorator import require_roles
+from app.services.asistencia_manager import AsistenciaManager
 
 
-asistencia_router = APIRouter(tags=["Asistencia"], prefix="/asistencia")
+asistencia_router = APIRouter(prefix="/asistencia", tags=["Asistencia"])
 
 
 @asistencia_router.post(
@@ -27,7 +26,8 @@ async def assign_asistencia(
     manager: AsistenciaManager = Depends(get_asistencia_manager),
 ):
     external_response = manager.assign_asistencia(
-        reunion_id, data.model_dump(mode="json"), claims)
+        reunion_id, data.model_dump(mode="json"), claims
+    )
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -43,12 +43,13 @@ async def assign_asistencia(
 )
 async def user_assign_asistencia(
     reunion_id: int,
-    data: UserAssingAsistencia,
+    data: UserRegisterAsistencia,
     claims: dict = Depends(require_roles(["usuario"])),
     manager: AsistenciaManager = Depends(get_asistencia_manager),
 ):
     external_response = manager.user_assign_asistencia(
-        reunion_id, data.model_dump(mode="json"), claims)
+        reunion_id, data.model_dump(mode="json"), claims
+    )
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -68,8 +69,7 @@ async def delete_asistencia(
     claims: dict = Depends(require_roles([])),
     manager: AsistenciaManager = Depends(get_asistencia_manager),
 ):
-    external_response = manager.delete_asistencia(
-        reunion_id, persona_id, claims)
+    external_response = manager.delete_asistencia(reunion_id, persona_id, claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -84,17 +84,13 @@ async def delete_asistencia(
 )
 def get_personas_with_asistencia(
     reunion_id: int,
-    page: int = Query(1, ge=1, description="Número de página"),
-    page_size: int = Query(
-        10, ge=1, le=100, description="Cantidad de registros por página"),
-    numero_documento: Optional[str] = Query(
-        None, description="Número de documento para filtrar"),
-    nombre: Optional[str] = Query(
-        None, description="Nombre de la persona para filtrar"),
-    apellido: Optional[str] = Query(
-        None, description="Apellido de la persona para filtrar"),
-    claims: dict = Depends(require_roles([])),
-    manager: AsistenciaManager = Depends(get_asistencia_manager)
+    page: int = Query(1, ge=1),
+    page_size: int = Query(10, ge=1, le=100),
+    numero_documento: Optional[str] = Query(None),
+    nombre: Optional[str] = Query(None),
+    apellido: Optional[str] = Query(None),
+    claims: dict = Depends(require_roles(["usuario"])),
+    manager: AsistenciaManager = Depends(get_asistencia_manager),
 ):
     external_response = manager.get_personas_with_asistencia(
         page=page,
@@ -103,7 +99,7 @@ def get_personas_with_asistencia(
         headers=claims,
         numero_documento=numero_documento,
         nombre=nombre,
-        apellido=apellido
+        apellido=apellido,
     )
     return Response(
         content=external_response.content,
@@ -112,21 +108,18 @@ def get_personas_with_asistencia(
     )
 
 
-
 @asistencia_router.get(
     "/{reunion_id}/persona/{persona_id}",
-    response_model=AsistenciaIndividual,
     status_code=status.HTTP_200_OK,
     dependencies=[Depends(BEARER_SCHEME)],
 )
-def get_personas_with_asistencia(
+def get_asistencia_persona(
     reunion_id: int,
     persona_id: int,
-    asistencia_manager: AsistenciaManager = Depends(get_asistencia_manager),
-    claims: dict = Depends(require_roles(['usuario'])),
-
+    claims: dict = Depends(require_roles(["usuario"])),
+    manager: AsistenciaManager = Depends(get_asistencia_manager),
 ):
-    external_response = asistencia_manager.get_asistencia_persona(persona_id, reunion_id, claims)
+    external_response = manager.get_asistencia_persona(persona_id, reunion_id, claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,

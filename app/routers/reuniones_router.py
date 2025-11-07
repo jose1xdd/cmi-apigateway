@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, Query, Response, status
-
 from app.ioc.container import get_reunion_manager
 from app.models.inputs.reunion.reunion_create import ReunionCreate
 from app.models.inputs.reunion.reunion_filters import ReunionFilter
@@ -11,8 +10,7 @@ from app.services.reunion_manager import ReunionManager
 from app.utils.constans import BEARER_SCHEME, JSON_HEADER
 from app.utils.decorators.role_check_decorator import require_roles
 
-
-reunion_router = APIRouter(tags=["Reunion"], prefix="/reunion")
+reunion_router = APIRouter(tags=["Reunión"], prefix="/reunion")
 
 
 @reunion_router.post(
@@ -26,8 +24,7 @@ async def create_reunion(
     claims: dict = Depends(require_roles([])),
     manager: ReunionManager = Depends(get_reunion_manager),
 ):
-    external_response = manager.create_reunion(
-        data.model_dump(mode="json"), claims)
+    external_response = manager.create_reunion(data.model_dump(mode="json"), claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -68,7 +65,8 @@ async def list_reuniones(
     manager: ReunionManager = Depends(get_reunion_manager),
 ):
     external_response = manager.list_reuniones(
-        page, page_size, claims, filters.model_dump(exclude_none=True))
+        page, page_size, claims, filters.model_dump(exclude_none=True)
+    )
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -88,8 +86,7 @@ async def update_reunion(
     claims: dict = Depends(require_roles(["usuario"])),
     manager: ReunionManager = Depends(get_reunion_manager),
 ):
-    external_response = manager.update_reunion(
-        reunion_id, data.model_dump(mode="json"), claims)
+    external_response = manager.update_reunion(reunion_id, data.model_dump(mode="json"), claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -115,39 +112,36 @@ async def delete_reunion(
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
     )
 
-
 @reunion_router.patch(
-    "/{reunion_id}/generate-asistencia-code",
+    "/{reunion_id}/abrir",
     status_code=status.HTTP_200_OK,
     response_model=EstadoResponse,
     dependencies=[Depends(BEARER_SCHEME)],
 )
-async def generate_asistencia_code(
+async def abrir_reunion(
     reunion_id: int,
     claims: dict = Depends(require_roles([])),
     manager: ReunionManager = Depends(get_reunion_manager),
 ):
-    external_response = manager.generate_asistencia_code(reunion_id, claims)
+    external_response = manager.abrir_reunion(reunion_id, claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
     )
 
-
 @reunion_router.patch(
-    "/{reunion_id}/delete-asistencia-code",
+    "/{reunion_id}/cerrar",
+    status_code=status.HTTP_200_OK,
     response_model=EstadoResponse,
     dependencies=[Depends(BEARER_SCHEME)],
-    status_code=status.HTTP_200_OK
-
 )
-def eliminar_codigo_asistencia(
+async def cerrar_reunion(
     reunion_id: int,
     claims: dict = Depends(require_roles([])),
-    manager: ReunionManager = Depends(get_reunion_manager)
+    manager: ReunionManager = Depends(get_reunion_manager),
 ):
-    external_response = manager.delete_asistencia_code(reunion_id, claims)
+    external_response = manager.cerrar_reunion(reunion_id, claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
