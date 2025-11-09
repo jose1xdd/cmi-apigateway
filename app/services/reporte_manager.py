@@ -17,3 +17,11 @@ class ReporteManager:
         self.logger.info(
             "Solicitando reporte de asistencia al microservicio de reportes")
         return self.client_reportes.get_reporte_asistencia(reunion_id, headers)
+    
+    def get_reporte_familia(self, familia_id: int, headers):
+        self.logger.info("Solicitando reporte de familia al microservicio de reportes")
+        return self.client_reportes.get_reporte_familia(familia_id, headers)
+    
+    def get_resumen_dashboard(self, headers):
+        self.logger.info("Solicitando resumen general del dashboard al microservicio de reportes")
+        return self.client_reportes.get_resumen_dashboard(headers)
