@@ -23,3 +23,17 @@ class ClientReportes(IClientReportes):
             headers=merged_headers,
             stream=True
         )
+    
+    def get_reporte_familia(self, familia_id: int, headers: Optional[Dict[str, str]] = None):
+        merged_headers = {**JSON_HEADER, **(headers or {})}
+        return requests.get(
+            f"{self.url}/reporte/familia/{familia_id}",
+            headers=merged_headers,
+            stream=True
+        )
+    def get_resumen_dashboard(self, headers: Optional[Dict[str, str]] = None):
+        merged_headers = {**JSON_HEADER, **(headers or {})}
+        return requests.get(
+            f"{self.url}/resumen",
+            headers=merged_headers
+        )

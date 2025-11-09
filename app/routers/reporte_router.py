@@ -74,3 +74,59 @@ def descargar_reporte_personas(
         media_type=response.headers.get("content-type", "application/json"),
         status_code=response.status_code,
     )
+
+@reportes_router.get(
+    "/reporte/familia/{familia_id}",
+    responses={200: {"content": {
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {}}}},
+    summary="Descargar reporte de miembros de una familia", dependencies=[Depends(BEARER_SCHEME)]
+)
+def descargar_reporte_familia(
+    familia_id: int,
+    claims: dict = Depends(require_roles([])),
+    manager: ReporteManager = Depends(get_reportes_manager)
+):
+    response = manager.get_reporte_familia(familia_id, claims)
+
+    if response.status_code == 200 and \
+       response.headers.get("content-type") == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+        return StreamingResponse(
+            response.raw,
+            media_type=response.headers.get("content-type"),
+            headers={
+                "Content-Disposition": f"attachment; filename=miembros_familia_{familia_id}.xlsx"},
+            status_code=response.status_code,
+        )
+
+    return Response(
+        content=response.content,
+        media_type=response.headers.get("content-type", "application/json"),
+        status_code=response.status_code,
+    )
+
+@reportes_router.get(
+    "/reportes/resumen",
+    summary="Obtener resumen general del dashboard",
+    description="Devuelve estadísticas consolidadas para el dashboard (personas, familias, reuniones, edades, etc.)",
+    dependencies=[Depends(BEARER_SCHEME)]
+)
+def obtener_resumen_dashboard(
+    claims: dict = Depends(require_roles([])),
+    manager: ReporteManager = Depends(get_reportes_manager)
+):
+    response = manager.get_resumen_dashboard(claims)
+
+    # Si vino correctamente (200 OK)
+    if response.status_code == 200:
+        return Response(
+            content=response.content,
+            media_type="application/json",
+            status_code=response.status_code,
+        )
+
+    # Si vino error del microservicio
+    return Response(
+        content=response.content,
+        media_type=response.headers.get("content-type", "application/json"),
+        status_code=response.status_code,
+    )
