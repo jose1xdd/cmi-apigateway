@@ -1,5 +1,6 @@
 import logging
-from app.client.ms_reportes.interface.interface_client_reportes import IClientReportes
+
+from app.client.ms_reportes.reportes.interface.interface_client_reportes import IClientReportes
 
 
 class ReporteManager:

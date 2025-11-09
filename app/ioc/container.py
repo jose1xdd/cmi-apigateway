@@ -9,7 +9,8 @@ from app.client.ms_gestion_usuarios.familia.impl.client_familia import ClientFam
 from app.client.ms_gestion_usuarios.parcialidad.impl.client_parcialidad import ClientParcialidad
 from app.client.ms_gestion_usuarios.personas.impl.client_personas import ClientPersonas
 from app.client.ms_index.impl.client_index import ClientIndex
-from app.client.ms_reportes.impl.client_reportes import ClientReportes
+from app.client.ms_reportes.censo.impl.client_censo import ClientCenso
+from app.client.ms_reportes.reportes.impl.client_reportes import ClientReportes
 from app.config.database import get_db
 from app.middlewares.middleware_auth import MiddlewarAuth
 from app.persistence.repository.persona_repository.interface.interface_persona_repository import IPersonaRepository
@@ -17,6 +18,7 @@ from app.persistence.repository.recovery_code_repository.interface.interface_rec
 from app.persistence.repository.repository_factory import RepositoryFactory
 from app.persistence.repository.user_repository.interface.interface_user_repository import IUsuarioRepository
 from app.services.asistencia_manager import AsistenciaManager
+from app.services.censo_manager import CensoManager
 from app.services.email_service.impl.email_service import EmailService
 from app.services.familia_manager import FamiliaManager
 from app.services.hashing_service.impl.hashing_service import HashingService
@@ -79,6 +81,11 @@ class Container(containers.DeclarativeContainer):
 
     client_reportes = providers.Factory(
         ClientReportes,
+        url=settings.ms_reportes_url
+    )
+
+    client_censo = providers.Factory(
+        ClientCenso,
         url=settings.ms_reportes_url
     )
 
@@ -174,3 +181,11 @@ def get_asistencia_manager(
     client_asistencia=Depends(Provide[Container.client_asistencia]),
 ) -> AsistenciaManager:
     return AsistenciaManager(client_asistencia, logger)
+
+
+@inject
+def get_censo_manager(
+    logger: logging.Logger = Depends(Provide[Container.logger]),
+    client_censo=Depends(Provide[Container.client_censo])
+) -> CensoManager:
+    return CensoManager(client_censo=client_censo, logger=logger)
