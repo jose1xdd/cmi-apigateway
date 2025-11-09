@@ -48,9 +48,6 @@ class UserManager():
                 self.logger.error("usuario no existente")
                 raise AppException(mensaje="Usuario no Existente",
                                    codigo_http=status.HTTP_400_BAD_REQUEST)
-            persona: Persona = self.persona_repository.get(user.personaId)
-            if persona.activo is False:
-                raise AppException("Usuario deshabilitado")
             verify_password = self.hashing_service.verify_password(
                 user.password, hashed_pasword)
             if (verify_password):

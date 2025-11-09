@@ -20,7 +20,6 @@ class Persona(Base):
     escolaridad = Column(Enum(EnumEscolaridad))
     direccion = Column(String(200))
     telefono = Column(String(20))
-    activo = Column(Boolean, default=True, nullable=False)
     idFamilia = Column(Integer, ForeignKey('Familia.id'))
     idParcialidad = Column(Integer, ForeignKey('Parcialidad.id'))
 
