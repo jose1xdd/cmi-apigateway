@@ -1,6 +1,6 @@
 import requests
 from typing import Dict, Optional
-from app.client.ms_reportes.interface.interface_client_reportes import IClientReportes
+from app.client.ms_reportes.reportes.interface.interface_client_reportes import IClientReportes
 from app.utils.constans import JSON_HEADER
 
 
