@@ -49,20 +49,6 @@ async def update_persona(
     )
 
 
-@persona_router.delete("/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
-async def delete_persona(
-    id: str,
-    claims: dict = Depends(require_roles([])),
-    manager: PersonaManager = Depends(get_persona_manager),
-):
-    external_response = manager.delete_person(id, claims)
-    return Response(
-        content=external_response.content,
-        status_code=external_response.status_code,
-        media_type=external_response.headers.get("Content-Type", JSON_HEADER),
-    )
-
-
 @persona_router.get("/", status_code=status.HTTP_200_OK, response_model=PaginatedPersonas, dependencies=[Depends(BEARER_SCHEME)])
 async def list_personas(
     page: int = Query(1, ge=1),
