@@ -5,7 +5,7 @@ from app.models.inputs.familia.assing_familia_users import AssingFamilia
 from app.models.inputs.persona.persona_carga_masiva import CargaMasivaResponse
 from app.models.inputs.persona.persona_create import PersonaCreate
 from app.models.inputs.persona.persona_filter import PersonaFilter
-from app.models.inputs.persona.persona_update import PersonaUpdate
+from app.models.inputs.persona.persona_update import PersonaDefuncion, PersonaUpdate
 from app.models.outputs.familia.familia_asignacion_response import AsignacionFamiliaResponse
 from app.models.outputs.paginated_response import PaginatedPersonas
 from app.models.outputs.persona.persona_output import PersonaOut
@@ -108,4 +108,26 @@ async def upload_excel(
         content=response.content,
         status_code=response.status_code,
         media_type=response.headers.get("Content-Type", JSON_HEADER),
+    )
+
+
+@persona_router.patch(
+    "/register-defuncion",
+    response_model=EstadoResponse,
+    dependencies=[Depends(BEARER_SCHEME)],
+    summary="Registra la fecha de defunción de una persona"
+)
+def register_defuncion(
+    data: PersonaDefuncion,
+    claims: dict = Depends(require_roles([])),
+    manager: PersonaManager = Depends(get_persona_manager)
+):
+    external_response = manager.register_defuncion(
+        data.model_dump(mode='json'), claims
+    )
+
+    return Response(
+        content=external_response.content,
+        status_code=external_response.status_code,
+        media_type=external_response.headers.get("Content-Type", JSON_HEADER),
     )

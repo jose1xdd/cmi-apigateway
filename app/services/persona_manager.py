@@ -34,3 +34,7 @@ class PersonaManager():
     async def upload_excel(self, file: UploadFile, headers):
         file_bytes = await file.read()  # 👈 lee el contenido en memoria
         return self.client_personas.upload_excel(file.filename, file_bytes, headers)
+    
+    def register_defuncion(self, data, headers):
+        return self.client_personas.register_defuncion(data, headers)
+

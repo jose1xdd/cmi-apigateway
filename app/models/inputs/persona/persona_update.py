@@ -16,8 +16,14 @@ class PersonaUpdate(BaseModel):
     escolaridad: Optional[EnumEscolaridad] = None
     direccion: Optional[str] = Field(default=None, max_length=200)
     telefono: Optional[str] = Field(default=None, max_length=20)
-    idFamilia: Optional[int] = None
     idParcialidad: Optional[int] = None
     class Config:
         from_attributes = True  # Para convertir entre SQLAlchemy y Pydantic fácilmente
         exclude_none = True
+
+class PersonaDefuncion(BaseModel):
+    id: str
+    fechaDefuncion: date
+
+    class Config:
+        from_attributes = True
