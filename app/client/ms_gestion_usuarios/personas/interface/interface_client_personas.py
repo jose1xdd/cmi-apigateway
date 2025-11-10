@@ -31,3 +31,7 @@ class IClientPersonas(ABC):
     @abstractmethod
     def upload_excel(self, file: BinaryIO, headers: Optional[Dict[str, str]] = None):
         pass
+
+    @abstractmethod
+    def register_defuncion(self, body: Dict[str, Any], headers: Optional[Dict[str, str]] = None):
+        pass

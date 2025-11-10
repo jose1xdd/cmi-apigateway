@@ -42,3 +42,7 @@ class ClientPersonas(IClientPersonas):
         merged_headers = {**(headers or {})}
         files = {"file": (filename, file_bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
         return requests.post(f"{self.url}/personas/upload-excel", files=files, headers=merged_headers)
+    
+    def register_defuncion(self, body: Dict[str, Any], headers: Optional[Dict[str, str]] = None):
+        merged_headers = {**JSON_HEADER, **(headers or {})}
+        return requests.patch(f"{self.url}/personas/register-defuncion", json=body, headers=merged_headers)
