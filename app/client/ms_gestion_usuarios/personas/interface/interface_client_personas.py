@@ -35,3 +35,7 @@ class IClientPersonas(ABC):
     @abstractmethod
     def register_defuncion(self, body: Dict[str, Any], headers: Optional[Dict[str, str]] = None):
         pass
+    
+    @abstractmethod
+    def unassign_familia_persona(self, persona_id: str, headers: Optional[Dict[str, str]] = None):
+        pass

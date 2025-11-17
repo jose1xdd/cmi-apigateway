@@ -96,6 +96,25 @@ def assing_family_users(
             "Content-Type", JSON_HEADER),
     )
 
+@persona_router.patch(
+    "/unassign-family/{persona_id}",
+    response_model=EstadoResponse,
+    dependencies=[Depends(BEARER_SCHEME)],
+    summary="Saca una persona de su familia (pone idFamilia = NULL)"
+)
+def unassign_family_user(
+    persona_id: str,
+    claims: dict = Depends(require_roles([])),
+    manager: PersonaManager = Depends(get_persona_manager)
+):
+    external_response = manager.unassign_familia_persona(persona_id, claims)
+
+    return Response(
+        content=external_response.content,
+        status_code=external_response.status_code,
+        media_type=external_response.headers.get("Content-Type", JSON_HEADER),
+    )
+
 
 @persona_router.post("/upload-excel", status_code=status.HTTP_201_CREATED, response_model=CargaMasivaResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def upload_excel(

@@ -38,3 +38,6 @@ class PersonaManager():
     def register_defuncion(self, data, headers):
         return self.client_personas.register_defuncion(data, headers)
 
+    def unassign_familia_persona(self, persona_id: str, headers):
+        return self.client_personas.unassign_familia_persona(persona_id, headers)
+

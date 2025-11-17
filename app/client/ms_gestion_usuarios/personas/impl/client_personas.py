@@ -40,9 +40,17 @@ class ClientPersonas(IClientPersonas):
 
     def upload_excel(self, filename: str, file_bytes: bytes, headers: Optional[Dict[str, str]] = None):
         merged_headers = {**(headers or {})}
-        files = {"file": (filename, file_bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
+        files = {"file": (
+            filename, file_bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
         return requests.post(f"{self.url}/personas/upload-excel", files=files, headers=merged_headers)
-    
+
     def register_defuncion(self, body: Dict[str, Any], headers: Optional[Dict[str, str]] = None):
         merged_headers = {**JSON_HEADER, **(headers or {})}
         return requests.patch(f"{self.url}/personas/register-defuncion", json=body, headers=merged_headers)
+
+    def unassign_familia_persona(self, persona_id: str, headers: Optional[Dict[str, str]] = None):
+        merged_headers = {**JSON_HEADER, **(headers or {})}
+        return requests.patch(
+            f"{self.url}/personas/unassign-family/{persona_id}",
+            headers=merged_headers
+        )
