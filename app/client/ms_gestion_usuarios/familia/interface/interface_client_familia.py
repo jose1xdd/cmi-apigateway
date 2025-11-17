@@ -24,8 +24,16 @@ class IClientFamilia(ABC):
         pass
 
     @abstractmethod
-    def search_familias(self, query: str, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None):
-        """Busca familias por nombre, apellido o cédula del líder."""
+    def search_familias(
+        self,
+        query: str,
+        page: int = 1,
+        page_size: int = 10,
+        parcialidad_id: int | None = None,
+        rango_miembros: str | None = None,
+        estado: str | None = None,
+        headers: Optional[Dict[str, str]] = None
+    ):
         pass
 
     @abstractmethod

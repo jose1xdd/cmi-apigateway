@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, File, Query, Response, UploadFile, status
 
 from app.ioc.container import get_familia_manager
-from app.models.inputs.familia.familia_create import FamiliaCreate
+from app.models.inputs.familia.familia_create import EnumEstadoFamilia, FamiliaCreate
 from app.models.inputs.persona.persona_carga_masiva import CargaMasivaResponse
 from app.models.outputs.paginated_response import PaginatedFamilias
 from app.models.outputs.persona.persona_output import PersonaOut
@@ -68,20 +68,38 @@ async def upload_excel(
         status_code=response.status_code,
         media_type=response.headers.get("Content-Type", JSON_HEADER),
     )
-@familia_router.get("/search", dependencies=[Depends(BEARER_SCHEME)])
+
+@familia_router.get(
+    "/search",
+    dependencies=[Depends(BEARER_SCHEME)],
+    response_model=PaginatedFamilias
+)
 def search_familias(
     query: Optional[str] = Query(None),
+    parcialidad_id: Optional[int] = Query(None),
+    rango_miembros: Optional[str] = Query(None, pattern="^(1-3|4-6|7\+)$"),
+    estado: Optional[EnumEstadoFamilia] = Query(None),
     page: int = Query(1, ge=1),
     page_size: int = Query(10, le=100),
     claims: dict = Depends(require_roles(["usuario"])),
     manager: FamiliaManager = Depends(get_familia_manager)
 ):
-    external_response = manager.search_familias(query, page, page_size, claims)
+    external_response = manager.search_familias(
+        query=query,
+        parcialidad_id=parcialidad_id,
+        rango_miembros=rango_miembros,
+        estado=estado,
+        page=page,
+        page_size=page_size,
+        headers=claims
+    )
+
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
     )
+
 
 
 @familia_router.get("/get/leader-data", dependencies=[Depends(BEARER_SCHEME)])
