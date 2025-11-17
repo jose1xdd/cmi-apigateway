@@ -25,12 +25,41 @@ class ClientFamilia(IClientFamilia):
         return requests.get(f"{self.url}/familias", params=params, headers=merged_headers)
 
     # 🔹 Buscar familias (por nombre/apellido/cédula del líder)
-    def search_familias(self, query: str, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None):
+    def search_familias(
+        self,
+        query: str,
+        page: int = 1,
+        page_size: int = 10,
+        parcialidad_id: int | None = None,
+        rango_miembros: str | None = None,
+        estado: str | None = None,
+        headers: Optional[Dict[str, str]] = None
+    ):
         merged_headers = {**JSON_HEADER, **(headers or {})}
-        params = {"query": query, "page": page, "page_size": page_size}
-        return requests.get(f"{self.url}/familias/search", params=params, headers=merged_headers)
+
+        params = {
+            "query": query,
+            "page": page,
+            "page_size": page_size,
+        }
+
+        if parcialidad_id is not None:
+            params["parcialidad_id"] = parcialidad_id
+
+        if rango_miembros:
+            params["rango_miembros"] = rango_miembros
+
+        if estado:
+            params["estado"] = estado
+
+        return requests.get(
+            f"{self.url}/familias/search",
+            params=params,
+            headers=merged_headers
+        )
 
     # 🔹 Obtener datos con líder/parcialidad
+
     def get_familias_leaderdata(self, page: int = 1, page_size: int = 10, headers: Optional[Dict[str, str]] = None):
         merged_headers = {**JSON_HEADER, **(headers or {})}
         params = {"page": page, "page_size": page_size}
@@ -62,5 +91,6 @@ class ClientFamilia(IClientFamilia):
     # 🔹 Carga masiva desde Excel
     def upload_excel(self, filename: str, file_bytes: bytes, headers: Optional[Dict[str, str]] = None):
         merged_headers = {**(headers or {})}
-        files = {"file": (filename, file_bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
+        files = {"file": (
+            filename, file_bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
         return requests.post(f"{self.url}/familias/upload-excel", files=files, headers=merged_headers)
