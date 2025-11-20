@@ -40,3 +40,9 @@ class FamiliaResumenOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class ReunionesPorEstado(BaseModel):
+    programadas: int
+    en_curso: int
+    cerradas: int

@@ -73,3 +73,11 @@ class IClientReunion(ABC):
     ):
         """Cierra una reunión (EN_CURSO → CERRADA)."""
         pass
+
+    @abstractmethod
+    def estadisticas_por_estado(
+        self,
+        headers: Optional[Dict[str, str]] = None
+    ):
+        """Retorna cantidad de reuniones por estado."""
+        pass

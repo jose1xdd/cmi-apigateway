@@ -35,3 +35,7 @@ class ReunionManager:
     def cerrar_reunion(self, reunion_id: int, headers: Dict[str, Any]):
         self.logger.info(f"[ReunionManager] Cerrando reunión ID={reunion_id}")
         return self.client_reunion.cerrar_reunion(reunion_id, headers)
+    
+    def estadisticas_por_estado(self, headers):
+        self.logger.info("[ReunionManager] Consultando estadísticas de reuniones por estado")
+        return self.client_reunion.estadisticas_por_estado(headers)

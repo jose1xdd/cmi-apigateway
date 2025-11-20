@@ -38,3 +38,6 @@ class ClientReunion(IClientReunion):
     def cerrar_reunion(self, reunion_id: int, headers: Optional[Dict[str, str]] = None):
         merged_headers = {**JSON_HEADER, **(headers or {})}
         return requests.patch(f"{self.url}/reunion/{reunion_id}/cerrar", headers=merged_headers)
+    def estadisticas_por_estado(self, headers: Optional[Dict[str, str]] = None):
+        merged_headers = {**JSON_HEADER, **(headers or {})}
+        return requests.get(f"{self.url}/reunion/estadisticas/por-estado", headers=merged_headers)

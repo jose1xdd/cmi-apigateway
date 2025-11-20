@@ -3,6 +3,7 @@ from app.ioc.container import get_reunion_manager
 from app.models.inputs.reunion.reunion_create import ReunionCreate
 from app.models.inputs.reunion.reunion_filters import ReunionFilter
 from app.models.inputs.reunion.reunion_update import ReunionUpdate
+from app.models.outputs.familia.familia_output import ReunionesPorEstado
 from app.models.outputs.response_estado import EstadoResponse
 from app.models.outputs.reunion.reunion_out import ReunionOut
 from app.models.outputs.paginated_response import PaginatedReunion
@@ -67,6 +68,24 @@ async def list_reuniones(
     external_response = manager.list_reuniones(
         page, page_size, claims, filters.model_dump(exclude_none=True)
     )
+    return Response(
+        content=external_response.content,
+        status_code=external_response.status_code,
+        media_type=external_response.headers.get("Content-Type", JSON_HEADER),
+    )
+
+@reunion_router.get(
+    "/estadisticas/por-estado",
+    status_code=status.HTTP_200_OK,
+    response_model=ReunionesPorEstado,
+    dependencies=[Depends(BEARER_SCHEME)],
+)
+async def estadisticas_por_estado(
+    claims: dict = Depends(require_roles(["usuario"])),
+    manager: ReunionManager = Depends(get_reunion_manager),
+):
+    external_response = manager.estadisticas_por_estado(claims)
+
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
