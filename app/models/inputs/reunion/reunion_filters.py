@@ -2,6 +2,9 @@ from pydantic import BaseModel
 from datetime import date, time
 from typing import Optional
 
+from app.models.outputs.reunion.reunion_out import EstadoReunion
+
+
 
 class ReunionFilter(BaseModel):
     titulo: Optional[str] = None
@@ -9,4 +12,4 @@ class ReunionFilter(BaseModel):
     horaInicio: Optional[time] = None
     horaFinal: Optional[time] = None
     ubicacion: Optional[str] = None
-    editable: Optional[bool] = None
+    reunion: Optional[EstadoReunion] = None

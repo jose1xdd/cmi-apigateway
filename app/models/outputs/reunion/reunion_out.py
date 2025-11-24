@@ -7,7 +7,12 @@ class EnumEstadoActividad(str, Enum):
     PROGRAMADA = "PROGRAMADA"
     EN_CURSO = "EN_CURSO"
     COMPLETADA = "COMPLETADA"
-    
+
+class EstadoReunion(str, Enum):
+    PROGRAMADA = "PROGRAMADA"
+    EN_CURSO = "EN_CURSO"
+    CERRADA = "CERRADA"
+
 class ReunionOut(BaseModel):
     id: int
     titulo: Optional[str] = None
@@ -15,6 +20,6 @@ class ReunionOut(BaseModel):
     horaInicio: Optional[time] = None
     horaFinal: Optional[time] = None
     ubicacion: Optional[str] = None
-    estado: Optional[EnumEstadoActividad] = None
+    estado: Optional[EstadoReunion] = None
     class Config:
         from_attributes = True
