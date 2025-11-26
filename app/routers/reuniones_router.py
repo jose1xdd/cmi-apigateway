@@ -60,7 +60,7 @@ async def list_reuniones(
     page: int = Query(1, ge=1),
     page_size: int = Query(10, ge=1, le=100),
     filters: ReunionFilter = Depends(),
-    claims: dict = Depends(require_roles(["usuario"])),
+    claims: dict = Depends(require_roles([])),
     manager: ReunionManager = Depends(get_reunion_manager),
 ):
     external_response = manager.list_reuniones(
@@ -79,7 +79,7 @@ async def list_reuniones(
     dependencies=[Depends(BEARER_SCHEME)],
 )
 async def estadisticas_por_estado(
-    claims: dict = Depends(require_roles(["usuario"])),
+    claims: dict = Depends(require_roles([])),
     manager: ReunionManager = Depends(get_reunion_manager),
 ):
     external_response = manager.estadisticas_por_estado(claims)
@@ -100,7 +100,7 @@ async def estadisticas_por_estado(
 async def update_reunion(
     reunion_id: int,
     data: ReunionUpdate,
-    claims: dict = Depends(require_roles(["usuario"])),
+    claims: dict = Depends(require_roles([])),
     manager: ReunionManager = Depends(get_reunion_manager),
 ):
     external_response = manager.update_reunion(reunion_id, data.model_dump(mode="json"), claims)

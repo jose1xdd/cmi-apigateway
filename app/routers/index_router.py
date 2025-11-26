@@ -24,7 +24,7 @@ async def create_publicacion(
     titulo: str = Form(...),
     contenido: Optional[str] = Form(None),
     fotos: Optional[List[UploadFile]] = File(None),
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: IndexManager = Depends(get_index_manager),
 ):
     fotos_bytes = [await f.read() for f in fotos] if fotos else None
@@ -48,7 +48,7 @@ async def create_publicacion(
 async def agregar_fotos(
     publicacion_id: int,
     fotos: List[UploadFile] = File(...),
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: IndexManager = Depends(get_index_manager),
 ):
     fotos_bytes = [await f.read() for f in fotos]
@@ -114,7 +114,7 @@ async def get_foto_by_id(
 async def update_publicacion(
     publicacion_id: int,
     body: PublicacionUpdate,
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: IndexManager = Depends(get_index_manager),
 ):
     external_response = manager.update_publicacion(
@@ -134,7 +134,7 @@ async def update_publicacion(
 )
 async def eliminar_foto(
     foto_id: int,
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: IndexManager = Depends(get_index_manager),
 ):
     external_response = manager.eliminar_foto(foto_id, headers=claims)
@@ -153,7 +153,7 @@ async def eliminar_foto(
 )
 async def eliminar_publicacion(
     publicacion_id: int,
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: IndexManager = Depends(get_index_manager),
 ):
     external_response = manager.eliminar_publicacion(

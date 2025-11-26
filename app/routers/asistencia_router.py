@@ -44,7 +44,7 @@ async def assign_asistencia(
 async def user_assign_asistencia(
     reunion_id: int,
     data: UserRegisterAsistencia,
-    claims: dict = Depends(require_roles(["usuario"])),
+    claims: dict = Depends(require_roles([])),
     manager: AsistenciaManager = Depends(get_asistencia_manager),
 ):
     external_response = manager.user_assign_asistencia(
@@ -89,7 +89,7 @@ def get_personas_with_asistencia(
     numero_documento: Optional[str] = Query(None),
     nombre: Optional[str] = Query(None),
     apellido: Optional[str] = Query(None),
-    claims: dict = Depends(require_roles(["usuario"])),
+    claims: dict = Depends(require_roles([])),
     manager: AsistenciaManager = Depends(get_asistencia_manager),
 ):
     external_response = manager.get_personas_with_asistencia(
@@ -116,7 +116,7 @@ def get_personas_with_asistencia(
 def get_asistencia_persona(
     reunion_id: int,
     persona_id: int,
-    claims: dict = Depends(require_roles(["usuario"])),
+    claims: dict = Depends(require_roles([])),
     manager: AsistenciaManager = Depends(get_asistencia_manager),
 ):
     external_response = manager.get_asistencia_persona(persona_id, reunion_id, claims)

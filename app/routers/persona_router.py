@@ -21,7 +21,7 @@ persona_router = APIRouter(tags=["Persona"])
 @persona_router.post("/create", status_code=status.HTTP_201_CREATED, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def create_persona(
     data: PersonaCreate,
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: PersonaManager = Depends(get_persona_manager),
 ):
     external_response = manager.create_person(
@@ -83,7 +83,7 @@ async def get_persona(
 @persona_router.patch("/assing-family", response_model=AsignacionFamiliaResponse, dependencies=[Depends(BEARER_SCHEME)])
 def assing_family_users(
     data: AssingFamilia,
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: PersonaManager = Depends(get_persona_manager)
 ):
     external_response = manager.assing_familia(
@@ -104,7 +104,7 @@ def assing_family_users(
 )
 def unassign_family_user(
     persona_id: str,
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: PersonaManager = Depends(get_persona_manager)
 ):
     external_response = manager.unassign_familia_persona(persona_id, claims)
@@ -119,7 +119,7 @@ def unassign_family_user(
 @persona_router.post("/upload-excel", status_code=status.HTTP_201_CREATED, response_model=CargaMasivaResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def upload_excel(
     file: UploadFile = File(...),
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: PersonaManager = Depends(get_persona_manager)
 ):
     response = await manager.upload_excel(file, claims)
@@ -138,7 +138,7 @@ async def upload_excel(
 )
 def register_defuncion(
     data: PersonaDefuncion,
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: PersonaManager = Depends(get_persona_manager)
 ):
     external_response = manager.register_defuncion(

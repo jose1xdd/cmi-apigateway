@@ -18,7 +18,7 @@ familia_router = APIRouter(tags=["Familia"])
 
 @familia_router.post("/create", status_code=status.HTTP_201_CREATED, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def create_familia(data: FamiliaCreate,
-                         claims: dict = Depends(require_roles([])),
+                         claims: dict = Depends(require_roles(["usuario"])),
                          manager: FamiliaManager = Depends(get_familia_manager)):
     external_response = manager.create_familia(data.model_dump(mode='json'), claims)
     return Response(
@@ -30,7 +30,7 @@ async def create_familia(data: FamiliaCreate,
 
 @familia_router.delete("/{id_familia}", status_code=status.HTTP_200_OK, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def delete_familia(id_familia: int,
-                         claims: dict = Depends(require_roles([])),
+                         claims: dict = Depends(require_roles(["usuario"])),
                          manager: FamiliaManager = Depends(get_familia_manager)):
     external_response = manager.delete_familia(id_familia, claims)
     return Response(
@@ -59,7 +59,7 @@ async def list_familias(
 @familia_router.post("/upload-excel", status_code=status.HTTP_201_CREATED, response_model=CargaMasivaResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def upload_excel(
     file: UploadFile = File(...),
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: FamiliaManager = Depends(get_familia_manager)
 ):
     response = await manager.upload_excel(file, claims)

@@ -18,7 +18,7 @@ parcialidad_router = APIRouter(tags=["Parcialidad"])
 @parcialidad_router.post("/create", status_code=status.HTTP_201_CREATED, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def create_parcialidad(
     data: ParcialidadCreate,
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: ParcialidadManager = Depends(get_parcialidad_manager),
 ):
     external_response = manager.create_parcialidad(
@@ -33,7 +33,7 @@ async def create_parcialidad(
 @parcialidad_router.delete("/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=EstadoResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def delete_parcialidad(
     id: str,
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: ParcialidadManager = Depends(get_parcialidad_manager),
 ):
     external_response = manager.delete_parcialidad(id, claims)
@@ -79,7 +79,7 @@ async def get_parcialidad(
 async def update_parcialidad(
     id: str,
     data: ParcialidadCreate,
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: ParcialidadManager = Depends(get_parcialidad_manager),
 ):
     external_response = manager.update_parcialidad(
@@ -94,7 +94,7 @@ async def update_parcialidad(
 @parcialidad_router.post("/upload-excel", dependencies=[Depends(BEARER_SCHEME)])
 async def upload_excel(
     file: UploadFile = File(...),
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: ParcialidadManager = Depends(get_parcialidad_manager),
 
 ):

@@ -21,7 +21,7 @@ reportes_router = APIRouter(tags=["Reportes"])
     summary="Descargar reporte de personas", dependencies=[Depends(BEARER_SCHEME)]
 )
 def descargar_reporte_personas(
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: ReporteManager = Depends(get_reportes_manager)
 ):
     response = manager.get_reporte_personas(claims)
@@ -52,7 +52,7 @@ def descargar_reporte_personas(
 )
 def descargar_reporte_personas(
     reunion_id: int,
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: ReporteManager = Depends(get_reportes_manager)
 ):
     response = manager.get_reporte_asistencia(reunion_id, claims)
@@ -83,7 +83,7 @@ def descargar_reporte_personas(
 )
 def descargar_reporte_familia(
     familia_id: int,
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: ReporteManager = Depends(get_reportes_manager)
 ):
     response = manager.get_reporte_familia(familia_id, claims)
@@ -111,7 +111,7 @@ def descargar_reporte_familia(
     dependencies=[Depends(BEARER_SCHEME)]
 )
 def obtener_resumen_dashboard(
-    claims: dict = Depends(require_roles([])),
+    claims: dict = Depends(require_roles(["usuario"])),
     manager: ReporteManager = Depends(get_reportes_manager)
 ):
     response = manager.get_resumen_dashboard(claims)
