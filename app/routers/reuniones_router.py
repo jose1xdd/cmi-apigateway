@@ -37,14 +37,12 @@ async def create_reunion(
     "/{reunion_id}",
     status_code=status.HTTP_200_OK,
     response_model=ReunionOut,
-    dependencies=[Depends(BEARER_SCHEME)],
 )
 async def get_reunion(
     reunion_id: int,
-    claims: dict = Depends(require_roles(["usuario"])),
     manager: ReunionManager = Depends(get_reunion_manager),
 ):
-    external_response = manager.get_reunion(reunion_id, claims)
+    external_response = manager.get_reunion(reunion_id, {})
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
