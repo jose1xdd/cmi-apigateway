@@ -11,7 +11,7 @@ class PersonaOut(BaseModel):
     nombre: str
     apellido: str
     fechaNacimiento: date
-    parentesco: EnumParentesco
+    parentesco: Optional[EnumParentesco]
     sexo: EnumSexo
     profesion: Optional[str]
     escolaridad: EnumEscolaridad
