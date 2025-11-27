@@ -40,16 +40,14 @@ async def assign_asistencia(
     "/user-assign/{reunion_id}",
     status_code=status.HTTP_201_CREATED,
     response_model=EstadoResponse,
-    dependencies=[Depends(BEARER_SCHEME)],
 )
 async def user_assign_asistencia(
     reunion_id: int,
     data: UserRegisterAsistencia,
-    claims: dict = Depends(require_roles([])),
     manager: AsistenciaManager = Depends(get_asistencia_manager),
 ):
     external_response = manager.user_assign_asistencia(
-        reunion_id, data.model_dump(mode="json"), claims
+        reunion_id, data.model_dump(mode="json"), None
     )
     return Response(
         content=external_response.content,
