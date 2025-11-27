@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, Query, Response, status
 from app.ioc.container import get_asistencia_manager
 from app.models.inputs.asistencia.asistencia_assing import AssingAsistencia
 from app.models.inputs.asistencia.user_asistencia_assing import UserRegisterAsistencia
+from app.models.outputs.paginated_response import PaginatedAsistenciaPersonas
 from app.models.outputs.response_estado import EstadoResponse
 from app.utils.constans import BEARER_SCHEME, JSON_HEADER
 from app.utils.decorators.role_check_decorator import require_roles
@@ -69,7 +70,8 @@ async def delete_asistencia(
     claims: dict = Depends(require_roles([])),
     manager: AsistenciaManager = Depends(get_asistencia_manager),
 ):
-    external_response = manager.delete_asistencia(reunion_id, persona_id, claims)
+    external_response = manager.delete_asistencia(
+        reunion_id, persona_id, claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -80,6 +82,7 @@ async def delete_asistencia(
 @asistencia_router.get(
     "/{reunion_id}/personas",
     status_code=status.HTTP_200_OK,
+    response_model=PaginatedAsistenciaPersonas,
     dependencies=[Depends(BEARER_SCHEME)],
 )
 def get_personas_with_asistencia(
@@ -119,7 +122,8 @@ def get_asistencia_persona(
     claims: dict = Depends(require_roles([])),
     manager: AsistenciaManager = Depends(get_asistencia_manager),
 ):
-    external_response = manager.get_asistencia_persona(persona_id, reunion_id, claims)
+    external_response = manager.get_asistencia_persona(
+        persona_id, reunion_id, claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
