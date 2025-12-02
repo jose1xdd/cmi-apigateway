@@ -94,3 +94,7 @@ class ClientFamilia(IClientFamilia):
         files = {"file": (
             filename, file_bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")}
         return requests.post(f"{self.url}/familias/upload-excel", files=files, headers=merged_headers)
+
+    def update_familia(self, body: Dict[str, Any], headers: Optional[Dict[str, str]] = None):
+        merged_headers = {**JSON_HEADER, **(headers or {})}
+        return requests.put(f"{self.url}/familias/update", json=body, headers=merged_headers)

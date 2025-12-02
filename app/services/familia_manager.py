@@ -70,3 +70,7 @@ class FamiliaManager:
     async def upload_excel(self, file: UploadFile, headers):
         file_bytes = await file.read()
         return self.client.upload_excel(file.filename, file_bytes, headers)
+
+    def update_familia(self, body: Dict[str, Any], headers: Optional[Dict[str, str]] = None):
+        self.logger.info(f"Actualizando familia con datos: {body}")
+        return self.client.update_familia(body, headers)

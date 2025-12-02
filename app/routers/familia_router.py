@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, File, Query, Response, UploadFile, statu
 
 from app.ioc.container import get_familia_manager
 from app.models.inputs.familia.familia_create import EnumEstadoFamilia, FamiliaCreate
+from app.models.inputs.familia.familia_update import FamiliaUpdate
 from app.models.inputs.persona.persona_carga_masiva import CargaMasivaResponse
 from app.models.outputs.paginated_response import PaginatedFamilias
 from app.models.outputs.persona.persona_output import PersonaOut
@@ -25,6 +26,24 @@ async def create_familia(data: FamiliaCreate,
         content=external_response.content,
         status_code=external_response.status_code,
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
+    )
+
+@familia_router.put(
+    "/update",
+    status_code=status.HTTP_200_OK,
+    response_model=EstadoResponse,
+    dependencies=[Depends(BEARER_SCHEME)]
+)
+async def update_familia(
+    data: FamiliaUpdate,
+    claims: dict = Depends(require_roles(["usuario"])),
+    manager: FamiliaManager = Depends(get_familia_manager)
+):
+    external_response = manager.update_familia(data.model_dump(mode="json"), claims)
+    return Response(
+        content=external_response.content,
+        status_code=external_response.status_code,
+        media_type=external_response.headers.get("Content-Type", JSON_HEADER)
     )
 
 

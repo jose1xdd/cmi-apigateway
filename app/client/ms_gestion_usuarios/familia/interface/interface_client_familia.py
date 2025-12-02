@@ -72,3 +72,7 @@ class IClientFamilia(ABC):
     def upload_excel(self, filename: str, file_bytes: bytes, headers: Optional[Dict[str, str]] = None):
         """Carga masiva de familias desde un archivo Excel."""
         pass
+
+    @abstractmethod
+    def update_familia(self, body: Dict[str, Any], headers: Optional[Dict[str, str]] = None):
+        pass
