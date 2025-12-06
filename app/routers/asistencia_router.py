@@ -87,9 +87,7 @@ def get_personas_with_asistencia(
     reunion_id: int,
     page: int = Query(1, ge=1),
     page_size: int = Query(10, ge=1, le=100),
-    numero_documento: Optional[str] = Query(None),
-    nombre: Optional[str] = Query(None),
-    apellido: Optional[str] = Query(None),
+    query: Optional[str] = Query(None, description="Buscar por documento, nombre o apellido"),
     claims: dict = Depends(require_roles([])),
     manager: AsistenciaManager = Depends(get_asistencia_manager),
 ):
@@ -98,15 +96,15 @@ def get_personas_with_asistencia(
         page_size=page_size,
         reunion_id=reunion_id,
         headers=claims,
-        numero_documento=numero_documento,
-        nombre=nombre,
-        apellido=apellido,
+        query=query
     )
+
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
     )
+
 
 
 @asistencia_router.get(

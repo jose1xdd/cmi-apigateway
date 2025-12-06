@@ -45,9 +45,7 @@ class IClientAsistencia(ABC):
         page: int,
         page_size: int,
         headers: Optional[Dict[str, str]] = None,
-        numero_documento: Optional[str] = None,
-        nombre: Optional[str] = None,
-        apellido: Optional[str] = None
+        query: Optional[str] = None,
     ):
         """Obtiene una lista paginada de personas con su estado de asistencia."""
         pass
