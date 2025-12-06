@@ -1,14 +1,19 @@
 from pydantic import BaseModel
 from typing import Optional
 from app.models.inputs.familia.familia_create import EnumEstadoFamilia
-from app.persistence.model.enum import EnumParentesco
+from app.models.outputs.persona.persona_output import PersonaOut
+
+
+from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime
 from app.models.outputs.persona.persona_output import PersonaOut
 
 
 class FamiliaOut(BaseModel):
     id: int
-    representante_id: Optional[str]
-    estado: EnumEstadoFamilia
+    representanteId: Optional[str]
+    fechaCreacion: Optional[datetime]   # ← Nuevo campo
     representante: Optional[PersonaOut] = None
 
     class Config:
@@ -23,7 +28,7 @@ class FamiliaDataLeader(BaseModel):
     cedula: str
     parcialidad: Optional[str]
     miembros: int
-    estado: EnumEstadoFamilia
+    fechaCreacion: Optional[datetime]   # ← Nuevo campo
 
     class Config:
         from_attributes = True
@@ -37,6 +42,7 @@ class FamiliaResumenOut(BaseModel):
     total_miembros: int
     miembros_activos: int
     defunciones: int
+    fechaCreacion: Optional[datetime]   # ← Nuevo campo
 
     class Config:
         from_attributes = True
