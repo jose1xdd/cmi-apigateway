@@ -62,8 +62,7 @@ class UserManager():
             return {"estado": "No se pudo iniciar la Sesion"}
 
     def refresh_token(self, refresh_token: str):
-        jwt = self.jwt_service.refresh_access_token(refresh_token)
-        return {"estado": "Exitoso", "jwt": jwt}
+        return self.jwt_service.refresh_access_token(refresh_token)
 
     def password_recovery(self, data: RecoveryPassword):
         self.logger.info(

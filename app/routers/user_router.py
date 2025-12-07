@@ -46,7 +46,7 @@ async def refresh(
     data: RefreshRequest,
     manager: UserManager = Depends(get_user_manager)
 ):
-    return JSONResponse(content=manager.refresh_token(data.refresh_token))
+    return manager.refresh_token(data.refresh_token)
 
 
 @user_router.post("/password/recovery", status_code=status.HTTP_202_ACCEPTED, response_model=EstadoResponse)

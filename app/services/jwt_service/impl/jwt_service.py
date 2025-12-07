@@ -1,5 +1,6 @@
 
 import jwt
+from app.models.outputs.usuario.login_response import LoginResponse
 from app.services.jwt_service.interface.interface_jwt_service import IJwtService
 from datetime import datetime, timedelta, timezone
 
@@ -50,7 +51,7 @@ class JwtService(IJwtService):
         token = jwt.encode(payload, self.secret_key, algorithm=self.algorithm)
         return token
 
-    def refresh_access_token(self, refresh_token: str) -> str:
+    def refresh_access_token(self, refresh_token: str) -> LoginResponse:
         """
         Genera un nuevo Access Token a partir de un Refresh Token válido.
         """
@@ -68,7 +69,8 @@ class JwtService(IJwtService):
             # Crear un nuevo access token
             new_access_token = self.create_jwt_token(
                 email, role, persona_id)
-            return new_access_token
+            refresh = self.create_refresh_token(email, persona_id, role)
+            return LoginResponse(estado='Exitoso', jwt=new_access_token, refresh_token=refresh)
 
         except Exception as e:
             raise ValueError(f"Error al refrescar el access token: {str(e)}")

@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from app.models.outputs.usuario.login_response import LoginResponse
+
 
 class IJwtService(ABC):
     @abstractmethod
@@ -15,5 +17,5 @@ class IJwtService(ABC):
         pass
 
     @abstractmethod
-    def refresh_access_token(self, refresh_token: str) -> str:
+    def refresh_access_token(self, refresh_token: str) -> LoginResponse:
         pass
