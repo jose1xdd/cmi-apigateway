@@ -5,7 +5,7 @@
         "PORT": "8080",
         "SECRET_KEY": "_SECRET_KEY_",
         "ALGORITHM": "HS256",
-        "ACCESS_EXPIRES_MINUTES": 60,
+        "ACCESS_EXPIRES_MINUTES": 2,
         "REFRESH_EXPIRES_DAYS": 30,
         "SMTP_SERVER": "smtp.gmail.com",
         "SMTP_PORT": "587",
