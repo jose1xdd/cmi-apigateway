@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field, EmailStr, field_validator
 from enum import Enum
 
+from app.utils.exceptions_handlers.models.error_response import AppException
+
 
 class EnumRol(str, Enum):
     usuario = "usuario"
@@ -17,5 +19,5 @@ class UsuarioCreate(BaseModel):
         try:
             EmailStr.validate(v)
         except Exception:
-            raise ValueError("Email inválido")
+            raise AppException("Email inválido")
         return v
