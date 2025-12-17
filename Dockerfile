@@ -3,7 +3,7 @@ FROM python:3.11-slim
 
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
-
+ENV TZ=America/Bogota
 # Copia el archivo requirements.txt desde el directorio anterior
 COPY ../requirements.txt .
 
