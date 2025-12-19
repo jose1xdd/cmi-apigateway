@@ -10,14 +10,6 @@ class EnumRol(str, Enum):
 
 
 class UsuarioCreate(BaseModel):
-    email: EmailStr = Field(..., description="Correo del usuario")
+    email: str = Field(..., description="Correo del usuario")
     personaId: str = Field(..., description="UUID de la persona asociada")
     rol: EnumRol = Field(..., description="Rol del usuario")
-
-    @field_validator("email", mode="before")
-    def custom_email_error(cls, v):
-        try:
-            EmailStr.validate(v)
-        except Exception:
-            raise AppException("Email inválido")
-        return v
