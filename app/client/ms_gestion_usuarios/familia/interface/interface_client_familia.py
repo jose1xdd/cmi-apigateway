@@ -49,6 +49,8 @@ class IClientFamilia(ABC):
         page_size: int = 10,
         query: Optional[str] = None,
         headers: Optional[Dict[str, str]] = None,
+        vivos: Optional[bool] = False
+        
     ):
         """Obtiene los miembros de una familia, con filtro opcional."""
         pass

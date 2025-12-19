@@ -66,11 +66,13 @@ class ClientFamilia(IClientFamilia):
         return requests.get(f"{self.url}/familias/get/leader-data", params=params, headers=merged_headers)
 
     # 🔹 Obtener miembros de familia
-    def get_miembros_familia(self, id_familia: int, page: int = 1, page_size: int = 10, query: Optional[str] = None, headers: Optional[Dict[str, str]] = None):
+    def get_miembros_familia(self, id_familia: int, page: int = 1, page_size: int = 10, query: Optional[str] = None, headers: Optional[Dict[str, str]] = None, vivos: Optional[bool] = False):
         merged_headers = {**JSON_HEADER, **(headers or {})}
         params = {"page": page, "page_size": page_size}
         if query:
             params["query"] = query
+        if vivos:
+            params["vivos"] = vivos
         return requests.get(f"{self.url}/familias/{id_familia}/miembros", params=params, headers=merged_headers)
 
     # 🔹 Obtener resumen de familia

@@ -21,12 +21,14 @@ familia_router = APIRouter(tags=["Familia"])
 async def create_familia(data: FamiliaCreate,
                          claims: dict = Depends(require_roles(["usuario"])),
                          manager: FamiliaManager = Depends(get_familia_manager)):
-    external_response = manager.create_familia(data.model_dump(mode='json'), claims)
+    external_response = manager.create_familia(
+        data.model_dump(mode='json'), claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
     )
+
 
 @familia_router.put(
     "/update",
@@ -39,7 +41,8 @@ async def update_familia(
     claims: dict = Depends(require_roles(["usuario"])),
     manager: FamiliaManager = Depends(get_familia_manager)
 ):
-    external_response = manager.update_familia(data.model_dump(mode="json"), claims)
+    external_response = manager.update_familia(
+        data.model_dump(mode="json"), claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
@@ -74,7 +77,6 @@ async def list_familias(
     )
 
 
-
 @familia_router.post("/upload-excel", status_code=status.HTTP_201_CREATED, response_model=CargaMasivaResponse, dependencies=[Depends(BEARER_SCHEME)])
 async def upload_excel(
     file: UploadFile = File(...),
@@ -87,6 +89,7 @@ async def upload_excel(
         status_code=response.status_code,
         media_type=response.headers.get("Content-Type", JSON_HEADER),
     )
+
 
 @familia_router.get(
     "/search",
@@ -120,7 +123,6 @@ def search_familias(
     )
 
 
-
 @familia_router.get("/get/leader-data", dependencies=[Depends(BEARER_SCHEME)])
 def get_familias_leaderdata(
     page: int = Query(1, ge=1),
@@ -128,13 +130,13 @@ def get_familias_leaderdata(
     claims: dict = Depends(require_roles(["usuario"])),
     manager: FamiliaManager = Depends(get_familia_manager)
 ):
-    external_response = manager.get_familias_leaderdata(page, page_size, claims)
+    external_response = manager.get_familias_leaderdata(
+        page, page_size, claims)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
     )
-
 
 
 @familia_router.get("/estadisticas-generales", dependencies=[Depends(BEARER_SCHEME)])
@@ -149,6 +151,7 @@ def get_estadisticas_generales(
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
     )
 
+
 @familia_router.get("/{id_familia}/resumen", dependencies=[Depends(BEARER_SCHEME)])
 def get_familia_resumen(
     id_familia: int,
@@ -162,21 +165,25 @@ def get_familia_resumen(
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
     )
 
+
 @familia_router.get("/{id_familia}/miembros", dependencies=[Depends(BEARER_SCHEME)])
 def get_miembros_familia(
     id_familia: int,
-    query: str | None = Query(None),
     page: int = Query(1, ge=1),
     page_size: int = Query(10, le=100),
+    query: str | None = Query(None),
+    vivos: bool = Query(False, description="Filtrar solo miembros vivos"),
     claims: dict = Depends(require_roles(["usuario"])),
     manager: FamiliaManager = Depends(get_familia_manager)
 ):
-    external_response = manager.get_miembros_familia(id_familia, page, page_size, query, claims)
+    external_response = manager.get_miembros_familia(
+        id_familia, page, page_size, query, claims, vivos)
     return Response(
         content=external_response.content,
         status_code=external_response.status_code,
         media_type=external_response.headers.get("Content-Type", JSON_HEADER),
     )
+
 
 @familia_router.get("/{id_familia}", status_code=status.HTTP_200_OK, response_model=PersonaOut, dependencies=[Depends(BEARER_SCHEME)])
 async def get_familia(

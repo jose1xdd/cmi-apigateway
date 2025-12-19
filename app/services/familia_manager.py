@@ -51,9 +51,9 @@ class FamiliaManager:
             "Obteniendo datos de familias con líder y parcialidad")
         return self.client.get_familias_leaderdata(page, page_size, headers)
 
-    def get_miembros_familia(self, id_familia: int, page: int = 1, page_size: int = 10, query: Optional[str] = None, headers: Optional[Dict[str, str]] = None):
+    def get_miembros_familia(self, id_familia: int, page: int = 1, page_size: int = 10, query: Optional[str] = None, headers: Optional[Dict[str, str]] = None, vivos: Optional[bool] = False):
         self.logger.info(f"Obteniendo miembros de la familia {id_familia}")
-        return self.client.get_miembros_familia(id_familia, page, page_size, query, headers)
+        return self.client.get_miembros_familia(id_familia, page, page_size, query, headers, vivos)
 
     def get_familia_resumen(self, id_familia: int, headers: Optional[Dict[str, str]] = None):
         self.logger.info(f"Obteniendo resumen de la familia {id_familia}")
