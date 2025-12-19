@@ -1,30 +1,42 @@
-from sqlalchemy import Boolean, Enum, Column, ForeignKey, String, Integer, Date
-from app.config.database import Base
-from app.persistence.model.enum import EnumDocumento, EnumEscolaridad, EnumParentesco, EnumSexo
+from sqlalchemy import Column, Enum, String, Integer, Date, ForeignKey
 from sqlalchemy.orm import relationship
-from app.persistence.model.familia import Familia
-from app.persistence.model.parcialidad import Parcialidad
-
+from app.config.database import Base
+from app.persistence.model.enum import (
+    EnumDocumento, EnumEscolaridad, EnumParentesco, EnumSexo
+)
 
 class Persona(Base):
     __tablename__ = 'Persona'
-    
-    id = Column(String(36), primary_key=True)
+
+    id = Column(String(255), primary_key=True)
     tipoDocumento = Column(Enum(EnumDocumento))
-    nombre = Column(String(50))
-    apellido = Column(String(50))
+    nombre = Column(String(255))
+    apellido = Column(String(255))
     fechaNacimiento = Column(Date)
     parentesco = Column(Enum(EnumParentesco))
     sexo = Column(Enum(EnumSexo))
-    profesion = Column(String(100), nullable=True)
+    profesion = Column(String(255), nullable=True)
     escolaridad = Column(Enum(EnumEscolaridad))
-    direccion = Column(String(200))
-    telefono = Column(String(20))
-    idFamilia = Column(Integer, ForeignKey('Familia.id'))
-    idParcialidad = Column(Integer, ForeignKey('Parcialidad.id'))
+    direccion = Column(String(255))
+    telefono = Column(String(255))
+    fechaDefuncion = Column(Date, nullable=True)
 
-    familia = relationship(Familia, back_populates="personas")
-    parcialidad = relationship(Parcialidad, back_populates="personas")
+    idParcialidad = Column(
+        Integer,
+        ForeignKey('Parcialidad.id'),
+        nullable=True
+    )
 
-    # Relación uno a uno con Usuario (definido en otro archivo)
+    # Relaciones
+    parcialidad = relationship("Parcialidad", back_populates="personas")
     usuario = relationship("Usuario", back_populates="persona", uselist=False)
+
+    # Relación indirecta a Familia - usando lazy evaluation
+    familias = relationship(
+        "MiembroFamilia",
+        back_populates="persona",
+        lazy="select"  # Añadir explícitamente
+    )
+
+    def __repr__(self):
+        return f"<Persona(id={self.id}, nombre={self.nombre})>"
